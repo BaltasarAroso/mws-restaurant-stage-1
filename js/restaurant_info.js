@@ -132,17 +132,17 @@ createReviewHTML = (review) => {
 
   const rating = document.createElement('h3');
   rating.innerHTML = `Rating: ${review.rating}`;
-  /*if (review.rating < 2) {
-    rating.style.backgroundColor = #a72a2a;
-  } else if (review.rating < 3) {
-    rating.style.backgroundColor = #b37021;
+  if (review.rating < 2) {
+    rating.style.backgroundColor = '#a72a2a';
+  } else if (review.rating <= 3) {
+    rating.style.backgroundColor = '#f79204';
   } else if (review.rating < 4) {
-    rating.style.backgroundColor = #e8e13b;
+    rating.style.backgroundColor = '#e8e13b';
   } else if (review.rating < 5) {
-    rating.style.backgroundColor = #b1d648;
+    rating.style.backgroundColor = '#b1d648';
   } else {
-    rating.style.backgroundColor = #02950d;
-  }*/
+    rating.style.backgroundColor = '#02950d';
+  }
   li.appendChild(rating);
 
   const comments = document.createElement('p');
