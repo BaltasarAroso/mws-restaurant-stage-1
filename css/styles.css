@@ -12,7 +12,7 @@ body {
 	margin: 0;
 	position: relative;
 	overflow-x: hidden;
-	min-width: 400px;
+	min-width: 415px;
 }
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
@@ -36,6 +36,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 	display: grid;
+}
+#homepage_title {
+	padding: 15px;
 }
 #maincontent {
   background-color: #f3f3f3;
@@ -85,7 +88,7 @@ nav h1 a {
 
 /* Add a slash symbol (/) before/behind each list item */
 #breadcrumb li+li:before {
-    padding: 8px;
+    padding: 8px 8px 8px 0;
     color: black;
     content: "/\00a0";
 }
@@ -94,6 +97,7 @@ nav h1 a {
 #breadcrumb li a {
     color: #0275d8;
     text-decoration: none;
+		padding: 15px 8px;
 }
 
 /* Add a color on mouse-over */
@@ -126,10 +130,9 @@ nav h1 a {
   border: 1px solid #fff;
   font-family: Arial,sans-serif;
   font-size: 11pt;
-  height: 35px;
+  height: 48px;
   letter-spacing: 0;
   margin: 0 0.75rem 0.75rem 0.75rem;
-  padding: 0 10px;
   width: 200px;
 }
 
@@ -185,7 +188,7 @@ nav h1 a {
   display: inline-block;
   font-size: 10pt;
   margin: 15px 0 0;
-  padding: 8px 30px 10px;
+  padding: 14px 30px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
@@ -193,7 +196,7 @@ nav h1 a {
 
 /* ====================== Restaurant Details ====================== */
 .inside {
-	min-width: 400px;
+	min-width: 415px;
 }
 
 .inside header {
@@ -317,18 +320,11 @@ nav h1 a {
 }
 
 @media screen and (max-width: 670px) {
-	.inside header {
-		width: 100%;
-	}
-
-	.inside footer {
-		width: auto;
-	}
 
 	.inside #map-container {
 		position: relative;
 		margin: 20px;
-	  width: auto;
+		width: auto;
 		height: 200px;
 	}
 
@@ -344,13 +340,6 @@ nav h1 a {
 }
 
 @media screen and (min-width: 670px) and (max-width: 900px) {
-	.inside header {
-		width: 100%;
-	}
-
-	.inside footer {
-		width: auto;
-	}
 
 	.inside #map-container {
 		position: relative;
