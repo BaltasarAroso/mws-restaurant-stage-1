@@ -9,7 +9,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/Desktop/Github/Udacity_Scholarship/project01/mws-restaurant-stage-1/data/restaurants.json`;
+    return `http://localhost:${port}/Github/Udacity_Scholarship/project01/mws-restaurant-stage-1/data/restaurants.json`;
   }
 
   /**
@@ -150,7 +150,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/Desktop/Github/Udacity_Scholarship/project01/mws-restaurant-stage-1/img/${restaurant.photograph}`);
+    return (`/Github/Udacity_Scholarship/project01/mws-restaurant-stage-1/img/${restaurant.photograph}`);
   }
 
   /**
