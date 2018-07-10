@@ -1,12 +1,14 @@
+const staticCacheName = 'mws-stage1-cache-v1'
+
 /*
- * Open cache named 'mws-stage1-cache' and
+ * Open cache named 'mws-stage1-cache'
  * Add cache all the urls needed in this project
  */
 
 self.addEventListener('install', function(event) {
     console.log('Service Worker in the installing mode...');
     event.waitUntil(
-        caches.open('mws-stage1-cache').then(function(cache) {
+        caches.open(staticCacheName).then(function(cache) {
             console.log('Service Worker caching all the urls');
             return cache.addAll([
                 '/',
@@ -35,7 +37,7 @@ self.addEventListener('install', function(event) {
 });
 
 /*
- * Respond with an entry from the cache if there is one.
+ * Respond with an entry from the cache if there is one
  * If there isn't, fetch from the network
  */
 
@@ -50,5 +52,22 @@ self.addEventListener('fetch', function(event) {
     );
 });
 
-
+/*
+ * Remove the old caches (not the actual one aka staticCacheName)
+ * Update the Service Worker with the reload
+ * (the checkbox of the inspector in the browser is no longer needed)
+ */
+self.addEventListener('activate', function(event) {
+    console.log('Service Worker in the activating mode...');
+    event.waitUntil({
+        caches:keys().then(function(cacheNames) {
+            return Promise.all(cacheNames.filter(function(selfCacheName) {
+                    return cacheNames.startsWith('mws-stage-cache-v') && selfCacheName !== staticCacheName;
+                }).map(function(selfCacheName) {
+                    return cache.delete(selfCacheName);
+                })
+            );
+        })
+    });
+});
 
