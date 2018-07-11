@@ -238,8 +238,8 @@ nav h1 a {
 	border-bottom: 2px solid #fff;
 }
 .inside #map-container {
-  background: blue none repeat scroll 0 0;
-  height: calc(100% - 10px);
+  background: #0000ff none repeat scroll 0 0;
+  height: calc(100% - 180px);
   position: fixed;
   right: 0;
   top: 120px;
@@ -252,7 +252,7 @@ nav h1 a {
 }
 .inside #footer {
   bottom: 0;
-  position: absolute;
+  position: fixed;
   width: 100%;
 }
 #restaurant-name {
