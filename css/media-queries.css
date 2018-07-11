@@ -1,7 +1,5 @@
 /* ====================== Responsive Media Queries ====================== */
 
-/* TODO: check the right margin problem after page resizing */
-
 @media screen and (max-width: 670px) {
 
 	.inside #map-container {
