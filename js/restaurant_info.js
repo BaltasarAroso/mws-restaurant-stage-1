@@ -127,11 +127,13 @@ createReviewHTML = (review) => {
   name.innerHTML = review.name;
   name.className = 'name';
   section.appendChild(name);
+  name.tabIndex = '0';
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
   date.className = 'date';
   section.appendChild(date);
+  date.tabIndex = '0';
 
   const rating = document.createElement('h3');
   rating.innerHTML = `Rating: ${review.rating}`;
@@ -147,10 +149,12 @@ createReviewHTML = (review) => {
     rating.style.backgroundColor = '#02950d';
   }
   li.appendChild(rating);
+  rating.tabIndex = '0';
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
   li.appendChild(comments);
+  comments.tabIndex = '0';
 
   return li;
 }
