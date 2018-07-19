@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/BaltasarAroso/mws-restaurant-stage-1#readme",
   "devDependencies": {
-    "gulp": "^4.0.0"
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^5.0.0"
   },
   "dependencies": {
     "gulp-sass": "^4.0.1"
