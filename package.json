@@ -1,0 +1,25 @@
+{
+  "name": "mws-restaurant",
+  "version": "1.0.0",
+  "description": "Mobile Web Specialist Nanodegree",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BaltasarAroso/mws-restaurant-stage-1.git"
+  },
+  "author": "Baltasar Aroso",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BaltasarAroso/mws-restaurant-stage-1/issues"
+  },
+  "homepage": "https://github.com/BaltasarAroso/mws-restaurant-stage-1#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0"
+  },
+  "dependencies": {
+    "gulp-sass": "^4.0.1"
+  }
+}
