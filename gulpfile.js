@@ -4,12 +4,19 @@ var gulp = require('gulp'),
 	sass = require('gulp-sass'),
 	postcss = require('gulp-postcss'),
 	autoprefixer = require('autoprefixer'),
+	cssnano = require('cssnano'),
 	sourcemaps = require('gulp-sourcemaps'),
 	babel = require('gulp-babel'),
+	concat = require('gulp-concat'),
+	uglify = require('gulp-uglify'),
+	gzip = require('gulp-gzip'),
 	del = require('del'),
 	browserSync = require('browser-sync').create();
 
-var build = gulp.series(clean, gulp.parallel(styles, css, html, js, watch));
+var build = gulp.series(
+	clean,
+	gulp.parallel(styles, css, html, imgs, scripts, scripts_dist, compress, watch)
+);
 
 var paths = {
 	styles: {
@@ -24,20 +31,15 @@ var paths = {
 		src: '*.html',
 		dest: 'dist/'
 	},
-	js: {
-		src: 'js/*.js',
+	scripts: {
+		src: 'js/**/*.js',
 		dest: 'dist/js'
+	},
+	imgs: {
+		src: 'img/*',
+		dest: 'dist/img'
 	}
 };
-
-function clean() {
-	del(['dist']);
-	return del(['css/*']);
-}
-
-function reload() {
-	browserSync.reload();
-}
 
 function styles() {
 	return gulp
@@ -49,7 +51,8 @@ function styles() {
 			postcss([
 				autoprefixer({
 					browsers: ['last 2 versions']
-				})
+				}),
+				cssnano()
 			])
 		)
 		.pipe(sourcemaps.write('.'))
@@ -65,27 +68,61 @@ function html() {
 	return gulp.src(paths.html.src).pipe(gulp.dest(paths.html.dest));
 }
 
-function js() {
+function imgs() {
+	return gulp.src(paths.imgs.src).pipe(gulp.dest(paths.imgs.dest));
+}
+
+function scripts() {
 	return gulp
-		.src(paths.js.src)
+		.src(paths.scripts.src)
 		.pipe(
 			babel({
 				presets: ['env']
 			})
 		)
-		.pipe(gulp.dest(paths.js.dest));
+		.pipe(concat('all.js')) //To implement this is necessary to change the scripts sources in .html
+		.pipe(gulp.dest(paths.scripts.dest));
+}
+
+function scripts_dist() {
+	return gulp
+		.src(paths.scripts.src)
+		.pipe(
+			babel({
+				presets: ['env']
+			})
+		)
+		.pipe(concat('all.js')) //To implement this is necessary to change the scripts sources in .html
+		.pipe(uglify())
+		.pipe(gulp.dest(paths.scripts.dest));
+}
+
+function compress() {
+	return gulp
+		.src('./js/*.js')
+		.pipe(gzip())
+		.pipe(gulp.dest('./dist/scripts'));
 }
 
 function watch() {
 	browserSync.init({
 		server: {
-			baseDir: './'
+			baseDir: './dist'
 		}
 	});
 	gulp.watch(paths.styles.src, reload);
 	gulp.watch(paths.css.src, reload);
 	gulp.watch(paths.html.src, reload);
 	gulp.watch(paths.js.src, reload);
+}
+
+function reload() {
+	browserSync.reload();
+}
+
+function clean() {
+	del(['dist']);
+	return del(['css/*']);
 }
 
 exports.styles = styles;
