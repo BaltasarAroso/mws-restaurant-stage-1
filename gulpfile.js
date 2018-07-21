@@ -5,6 +5,7 @@ var gulp = require('gulp'),
 	postcss = require('gulp-postcss'),
 	autoprefixer = require('autoprefixer'),
 	sourcemaps = require('gulp-sourcemaps'),
+	babel = require('gulp-babel'),
 	del = require('del'),
 	browserSync = require('browser-sync').create();
 
@@ -17,20 +18,20 @@ var paths = {
 	},
 	css: {
 		src: 'css/*.css',
-		dest: 'assets/css'
+		dest: 'dist/css'
 	},
 	html: {
 		src: '*.html',
-		dest: 'assets/'
+		dest: 'dist/'
 	},
 	js: {
 		src: 'js/*.js',
-		dest: 'assets/js'
+		dest: 'dist/js'
 	}
 };
 
 function clean() {
-	del(['assets']);
+	del(['dist']);
 	return del(['css/*']);
 }
 
@@ -65,7 +66,14 @@ function html() {
 }
 
 function js() {
-	return gulp.src(paths.js.src).pipe(gulp.dest(paths.js.dest));
+	return gulp
+		.src(paths.js.src)
+		.pipe(
+			babel({
+				presets: ['env']
+			})
+		)
+		.pipe(gulp.dest(paths.js.dest));
 }
 
 function watch() {
