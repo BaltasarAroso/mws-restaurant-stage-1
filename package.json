@@ -1,31 +1,36 @@
 {
-  "name": "mws-restaurant",
-  "version": "1.0.0",
-  "description": "Mobile Web Specialist Nanodegree",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BaltasarAroso/mws-restaurant-stage-1.git"
-  },
-  "author": "Baltasar Aroso",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/BaltasarAroso/mws-restaurant-stage-1/issues"
-  },
-  "homepage": "https://github.com/BaltasarAroso/mws-restaurant-stage-1#readme",
-  "devDependencies": {
-    "autoprefixer": "^9.0.0",
-    "browser-sync": "^2.24.5",
-    "cssnano": "^4.0.3",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-postcss": "^7.0.1",
-    "gulp-sass": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.4"
-  },
-  "dependencies": {
-    "del": "^3.0.0"
-  }
+	"name": "mws-restaurant",
+	"version": "1.0.0",
+	"description": "Mobile Web Specialist Nanodegree",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/BaltasarAroso/mws-restaurant-stage-1.git"
+	},
+	"author": "Baltasar Aroso",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/BaltasarAroso/mws-restaurant-stage-1/issues"
+	},
+	"homepage": "https://github.com/BaltasarAroso/mws-restaurant-stage-1#readme",
+	"devDependencies": {
+		"autoprefixer": "^9.0.0",
+		"browser-sync": "^2.24.6",
+		"eslint": "^5.1.0",
+		"eslint-config-google": "^0.9.1",
+		"eslint-config-prettier": "^2.9.0",
+		"eslint-plugin-prettier": "^2.6.2",
+		"gulp": "github:gulpjs/gulp#4.0",
+		"gulp-postcss": "^7.0.1",
+		"gulp-sass": "^4.0.1",
+		"gulp-sourcemaps": "^2.6.4",
+		"prettier": "^1.13.7"
+	},
+	"dependencies": {
+		"ajv": "^6.5.2",
+		"del": "^3.0.0"
+	}
 }
