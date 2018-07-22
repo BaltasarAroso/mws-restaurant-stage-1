@@ -10,6 +10,7 @@ var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 	gzip = require('gulp-gzip'),
+	imagemin = require('gulp-imagemin'),
 	del = require('del'),
 	browserSync = require('browser-sync').create();
 
@@ -69,7 +70,10 @@ function html() {
 }
 
 function imgs() {
-	return gulp.src(paths.imgs.src).pipe(gulp.dest(paths.imgs.dest));
+	return gulp
+		.src(paths.imgs.src)
+		.pipe(imagemin())
+		.pipe(gulp.dest(paths.imgs.dest));
 }
 
 function scripts() {
