@@ -103,9 +103,9 @@ function scripts_dist() {
 
 function compress() {
 	return gulp
-		.src('./js/*.js')
+		.src(paths.scripts.src)
 		.pipe(gzip())
-		.pipe(gulp.dest('./dist/scripts'));
+		.pipe(gulp.dest(paths.scripts.dest));
 }
 
 function watch() {
@@ -117,7 +117,8 @@ function watch() {
 	gulp.watch(paths.styles.src, reload);
 	gulp.watch(paths.css.src, reload);
 	gulp.watch(paths.html.src, reload);
-	gulp.watch(paths.js.src, reload);
+	gulp.watch(paths.scripts.src, reload);
+	gulp.watch(paths.imgs.src, reload);
 }
 
 function reload() {
