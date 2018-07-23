@@ -2,7 +2,7 @@
 	"name": "mws-restaurant",
 	"version": "1.0.0",
 	"description": "Mobile Web Specialist Nanodegree",
-	"main": "index.js",
+	"main": "gulpfile.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"precommit": "pretty-quick --staged"
