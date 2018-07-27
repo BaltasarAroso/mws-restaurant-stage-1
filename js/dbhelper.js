@@ -1,3 +1,8 @@
+/* eslint no-undef: "off" */
+/* eslint no-unused-vars: "off" */
+/* eslint no-console: "off" */
+
+// import idb from 'idb';
 /**
  * Common database helper functions.
  */
@@ -15,19 +20,38 @@ class DBHelper {
 	 * Fetch all restaurants.
 	 */
 	static fetchRestaurants(callback) {
-		fetch(DBHelper.DATABASE_URL)
-			.then(response => {
-				return response.json();
-			})
-			.then(data => {
-				const restaurants = data;
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', DBHelper.DATABASE_URL);
+		xhr.onload = () => {
+			if (xhr.status === 200) {
+				// Got a success response from server!
+				const json = JSON.parse(xhr.responseText);
+				const restaurants = json.restaurants;
 				callback(null, restaurants);
-			})
-			.catch(err => {
-				const error = `Request failed. Returned status of ${err}`;
+			} else {
+				// Oops!. Got an error from server.
+				const error = `Request failed. Returned status of ${xhr.status}`;
 				callback(error, null);
-			});
+			}
+		};
+		xhr.send();
 	}
+
+	//============================ Using Fetch API ============================//
+	// static fetchRestaurants(callback) {
+	// 	fetch(DBHelper.DATABASE_URL)
+	// 		.then(response => {
+	// 			return response.json();
+	// 		})
+	// 		.then(data => {
+	// 			const restaurants = data;
+	// 			callback(null, restaurants);
+	// 		})
+	// 		.catch(err => {
+	// 			const error = `Request failed. Returned status of ${err}`;
+	// 			callback(error, null);
+	// 		});
+	// }
 
 	/**
 	 * Fetch a restaurant by its ID.

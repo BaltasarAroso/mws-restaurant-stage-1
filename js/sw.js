@@ -1,3 +1,6 @@
+/* eslint no-undef: "off" */
+/* eslint no-console: "off" */
+
 const staticCacheName = 'mws-stage1-cache-v1';
 
 /*
