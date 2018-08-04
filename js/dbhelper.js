@@ -1,7 +1,3 @@
-/* eslint no-undef: "off" */
-/* eslint no-unused-vars: "off" */
-/* eslint no-console: "off" */
-
 // import idb from 'idb';
 /**
  * Common database helper functions.
@@ -19,39 +15,152 @@ class DBHelper {
 	/**
 	 * Fetch all restaurants.
 	 */
-	static fetchRestaurants(callback) {
-		let xhr = new XMLHttpRequest();
-		xhr.open('GET', DBHelper.DATABASE_URL);
-		xhr.onload = () => {
-			if (xhr.status === 200) {
-				// Got a success response from server!
-				const json = JSON.parse(xhr.responseText);
-				const restaurants = json.restaurants;
-				callback(null, restaurants);
-			} else {
-				// Oops!. Got an error from server.
-				const error = `Request failed. Returned status of ${xhr.status}`;
-				callback(error, null);
+	// static fetchRestaurants(callback) {
+	// 	let xhr = new XMLHttpRequest();
+	// 	xhr.open('GET', DBHelper.DATABASE_URL);
+	// 	xhr.onload = () => {
+	// 		if (xhr.status === 200) {
+	// 			// Got a success response from server!
+	// 			const json = JSON.parse(xhr.responseText);
+	// 			const restaurants = json.restaurants;
+	// 			callback(null, restaurants);
+	// 		} else {
+	// 			// Oops!. Got an error from server.
+	// 			const error = `Request failed. Returned status of ${xhr.status}`;
+	// 			callback(error, null);
+	// 		}
+	// 	};
+	// 	xhr.send();
+	// }
+
+	//============================ Configure IndexedDB functions ============================//
+
+	/**
+	 * Open IndexedDB
+	 */
+	static OpenDB(name) {
+		return idb.open(name, 1, function(upgradeDB) {
+			// switch (upgradeDB.oldVersion) {
+			// 	case 0:
+			// 		var keyValStore = upgradeDB.createObjectStore('keyval');
+			// 		keyValStore.put('world', 'hello');
+			// 		break;
+			// 	case 1:
+			// 		upgradeDB.createObjectStore('people', { keyPath: 'name' });
+			// 		break;
+			// 	case 2:
+			// 		var peopleStore = upgradeDB.transaction.objectStore('people');
+			// 		peopleStore.createIndex('animal', 'favoriteAnimal');
+			// 		peopleStore.createIndex('age', 'age');
+			// }
+			if (!upgradeDB.objectStoreNames.contains('restaurants')) {
+				var restaurantStore = upgradeDB.createObjectStore('restaurants', { keyPath: 'id' });
 			}
-		};
-		xhr.send();
+		});
+	}
+
+	/**
+	 * Read From IndexedDB
+	 */
+	static ReadFromDB(dbPromise, objName, key) {
+		return dbPromise.then(function(db) {
+			var tx = db.transaction(objName);
+			var objStore = tx.objectStore(objName);
+			return objStore.get(key);
+		});
+		// .then(function(val) {
+		// 	console.log('The value of ', key, ' is:', val);
+		// });
+	}
+
+	static ReadAllFromDB(dbPromise, objName) {
+		return dbPromise.then(function(db) {
+			var tx = db.transaction(objName);
+			var objStore = tx.objectStore(objName);
+			return objStore.getAll();
+		});
+		// .then(function(val) {
+		// 	console.log(objName, ': ', val);
+		// });
+	}
+
+	static ReadAllInOrderFromDB(dbPromise, objName, order) {
+		return dbPromise.then(function(db) {
+			var tx = db.transaction(objName);
+			var objStore = tx.objectStore(objName);
+			var objIndex = objStore.index(order);
+			return objIndex.getAll();
+		});
+		// .then(function(val) {
+		// 	console.log(objName, 'by ', order, ': ', val);
+		// });
+	}
+
+	/**
+	 * Write/Save to IndexedDB
+	 */
+	static WriteKeyValueToDB(dbPromise, objName, key2write, value2write) {
+		return dbPromise.then(function(db) {
+			var tx = db.transaction(objName, 'readwrite');
+			var objStore = tx.objectStore(objName);
+			objStore.put(key2write, value2write);
+			return tx.complete;
+		});
+		// .then(function() {
+		// 	console.log('Added ', key2write, ':', value2write, 'to ', objName);
+		// });
+	}
+
+	static WriteToDB(dbPromise, data, objName) {
+		return dbPromise.then(function(db) {
+			var tx = db.transaction(objName, 'readwrite');
+			var objStore = tx.objectStore(objName);
+			for (var key in data) {
+				objStore.put(key);
+			}
+			return tx.complete;
+		});
+		// .then(function() {
+		// 	console.log('Added ', obj2write, 'to ', objName);
+		// });
+	}
+
+	/**
+	 * Get Data From URL
+	 */
+	static GetDataFromURL(dbPromise) {
+		return fetch(DBHelper.DATABASE_URL)
+			.then(response => {
+				return response.json();
+			})
+			.then(data => {
+				this.WriteToDB(dbPromise, data, 'restaurants');
+				callback(null, data);
+			});
 	}
 
 	//============================ Using Fetch API ============================//
-	// static fetchRestaurants(callback) {
-	// 	fetch(DBHelper.DATABASE_URL)
-	// 		.then(response => {
-	// 			return response.json();
-	// 		})
-	// 		.then(data => {
-	// 			const restaurants = data;
-	// 			callback(null, restaurants);
-	// 		})
-	// 		.catch(err => {
-	// 			const error = `Request failed. Returned status of ${err}`;
-	// 			callback(error, null);
-	// 		});
-	// }
+
+	static fetchRestaurants(callback) {
+		var dbPromise = this.OpenDB('restaurant-review-DB');
+		this.ReadAllFromDB(dbPromise, 'restaurants')
+			.then(data => {
+				if (data.length == 0) {
+					return this.GetDataFromURL(dbPromise);
+				}
+				return data;
+			})
+			.then(restaurants => {
+				callback(null, restaurants);
+			});
+		// this.WriteKeyValueToDB(dbPromise, 'keyval', 'bar', 'foo');
+		// this.WriteToDB(dbPromise, 'people', { name: 'John', age: '21', favouriteAnimal: 'dog' });
+		// this.WriteToDB(dbPromise, 'people', { name: 'Helton', age: '34', favouriteAnimal: 'cat' });
+		// this.WriteToDB(dbPromise, 'people', { name: 'Peter', age: '15', favouriteAnimal: 'cat' });
+		// this.ReadFromDB(dbPromise, 'keyval', 'hello');
+		// this.ReadAllFromDB(dbPromise, 'people');
+		// this.ReadAllInOrderFromDB(dbPromise, 'people', 'age');
+	}
 
 	/**
 	 * Fetch a restaurant by its ID.
