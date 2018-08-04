@@ -9,9 +9,13 @@
 		"sourceType": "module"
 	},
 	"rules": {
-		"indent": ["error", "tab"],
+		"indent": ["off", "tab"],
 		"quotes": ["error", "single"],
 		"semi": ["error", "always"],
+		"no-console": "off",
+		"no-unused-vars": "off",
+		"no-undef": "off",
+		"no-useless-escape": "off",
 		"prettier/prettier": [
 			"error",
 			{
