@@ -1,5 +1,3 @@
-/* eslint no-undef: "off" */
-
 'use strict';
 
 (function() {
