@@ -285,7 +285,12 @@ class DBHelper {
 	 * Restaurant image URL.
 	 */
 	static imageUrlForRestaurant(restaurant) {
-		return `/img/${restaurant.photograph}`;
+		var image = restaurant['photograph'];
+		// problem with data file from the server that don´t have the 'photograph' field defined in the 10th restaurant
+		if (!image) {
+			image = 10;
+		}
+		return `../img/${image}.jpg`;
 	}
 
 	/**
