@@ -49,6 +49,33 @@ fetchRestaurantFromURL = callback => {
 };
 
 /**
+ * Get current review from page URL.
+ */
+fetchReviewsFromURL = callback => {
+	if (self.reviews) {
+		// reviews already fetched!
+		callback(null, self.reviews);
+		return;
+	}
+	const id = getParameterByName('id');
+	if (!id) {
+		// no id found in URL
+		error = 'No reviews id in URL';
+		callback(error, null);
+	} else {
+		DBHelper.fetchReviewsById(id, (error, reviews) => {
+			self.reviews = reviews;
+			if (!reviews) {
+				console.error(error);
+				return;
+			}
+			fillReviewsHTML();
+			callback(null, reviews);
+		});
+	}
+};
+
+/**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
@@ -71,7 +98,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 		fillRestaurantHoursHTML();
 	}
 	// fill reviews
-	fillReviewsHTML();
+	// fillReviewsHTML();
+	fetchReviewsFromURL();
 };
 
 /**

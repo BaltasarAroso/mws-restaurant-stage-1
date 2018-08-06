@@ -1,4 +1,7 @@
 // import idb from 'idb';
+var RESTAURANT = 1;
+var REVIEW = 0;
+
 /**
  * Common database helper functions.
  */
@@ -40,22 +43,21 @@ class DBHelper {
 	 */
 	static OpenDB(name) {
 		return idb.open(name, 1, function(upgradeDB) {
-			// switch (upgradeDB.oldVersion) {
-			// 	case 0:
-			// 		var keyValStore = upgradeDB.createObjectStore('keyval');
-			// 		keyValStore.put('world', 'hello');
-			// 		break;
-			// 	case 1:
-			// 		upgradeDB.createObjectStore('people', { keyPath: 'name' });
-			// 		break;
-			// 	case 2:
-			// 		var peopleStore = upgradeDB.transaction.objectStore('people');
-			// 		peopleStore.createIndex('animal', 'favoriteAnimal');
-			// 		peopleStore.createIndex('age', 'age');
-			// }
 			if (!upgradeDB.objectStoreNames.contains('restaurants')) {
-				var restaurantStore = upgradeDB.createObjectStore('restaurants', { keyPath: 'id' });
+				upgradeDB.createObjectStore('restaurants', {
+					keyPath: 'id'
+				});
 			}
+			var restaurantStore = upgradeDB.transaction.objectStore('restaurants');
+			restaurantStore.getAll().then(function(results) {
+				for (var i = 1; i <= results.length; i++) {
+					if (!upgradeDB.objectStoreNames.contains(`reviews-${i}`)) {
+						upgradeDB.createObjectStore(`reviews-${i}`, {
+							keyPath: 'id'
+						});
+					}
+				}
+			});
 		});
 	}
 
@@ -85,15 +87,16 @@ class DBHelper {
 	}
 
 	static ReadAllInOrderFromDB(dbPromise, objName, order) {
-		return dbPromise.then(function(db) {
-			var tx = db.transaction(objName);
-			var objStore = tx.objectStore(objName);
-			var objIndex = objStore.index(order);
-			return objIndex.getAll();
-		});
-		// .then(function(val) {
-		// 	console.log(objName, 'by ', order, ': ', val);
-		// });
+		return dbPromise
+			.then(function(db) {
+				var tx = db.transaction(objName);
+				var objStore = tx.objectStore(objName);
+				var objIndex = objStore.index(order);
+				return objIndex.getAll();
+			})
+			.then(function(val) {
+				console.log(objName, 'by ', order, ': ', val);
+			});
 	}
 
 	/**
@@ -111,13 +114,12 @@ class DBHelper {
 		// });
 	}
 
-	static WriteToDB(dbPromise, data, objName) {
+	static WriteToDB(dbPromise, data, objName, tag) {
 		return dbPromise.then(function(db) {
 			var tx = db.transaction(objName, 'readwrite');
 			var objStore = tx.objectStore(objName);
-			for (var key in data) {
-				objStore.put(key);
-			}
+			// tag = 1 means 'restaurants' objStore and tag = 0 means 'reviews' objStore
+			tag ? Array.from(data).forEach(item => objStore.put(item)) : objStore.put(data);
 			return tx.complete;
 		});
 		// .then(function() {
@@ -128,39 +130,108 @@ class DBHelper {
 	/**
 	 * Get Data From URL
 	 */
-	static GetDataFromURL(dbPromise) {
+	static GetDataFromURL(dbPromise, tag) {
 		return fetch(DBHelper.DATABASE_URL)
 			.then(response => {
 				return response.json();
 			})
 			.then(data => {
-				this.WriteToDB(dbPromise, data, 'restaurants');
-				callback(null, data);
+				if (tag) {
+					DBHelper.WriteToDB(dbPromise, data, 'restaurants', 1);
+				} else {
+					DBHelper.WriteToDB(dbPromise, data, `reviews-${self.restaurant.id}`, 0);
+					console.log(`Reviews data from API for restaurant: ${self.restaurant.id}`);
+					console.log(data);
+				}
+				// callback(null, data);
+				return data;
 			});
 	}
 
 	//============================ Using Fetch API ============================//
 
 	static fetchRestaurants(callback) {
-		var dbPromise = this.OpenDB('restaurant-review-DB');
-		this.ReadAllFromDB(dbPromise, 'restaurants')
+		var dbPromise = DBHelper.OpenDB('restaurant-review-DB');
+		DBHelper.ReadAllFromDB(dbPromise, 'restaurants')
 			.then(data => {
 				if (data.length == 0) {
-					return this.GetDataFromURL(dbPromise);
+					return DBHelper.GetDataFromURL(dbPromise, RESTAURANT);
 				}
 				return data;
 			})
 			.then(restaurants => {
 				callback(null, restaurants);
 			});
-		// this.WriteKeyValueToDB(dbPromise, 'keyval', 'bar', 'foo');
-		// this.WriteToDB(dbPromise, 'people', { name: 'John', age: '21', favouriteAnimal: 'dog' });
-		// this.WriteToDB(dbPromise, 'people', { name: 'Helton', age: '34', favouriteAnimal: 'cat' });
-		// this.WriteToDB(dbPromise, 'people', { name: 'Peter', age: '15', favouriteAnimal: 'cat' });
-		// this.ReadFromDB(dbPromise, 'keyval', 'hello');
-		// this.ReadAllFromDB(dbPromise, 'people');
-		// this.ReadAllInOrderFromDB(dbPromise, 'people', 'age');
+		// DBHelper.WriteKeyValueToDB(dbPromise, 'keyval', 'bar', 'foo');
+		// DBHelper.WriteToDB(dbPromise, 'people', { name: 'John', age: '21', favouriteAnimal: 'dog' });
+		// DBHelper.WriteToDB(dbPromise, 'people', { name: 'Helton', age: '34', favouriteAnimal: 'cat' });
+		// DBHelper.WriteToDB(dbPromise, 'people', { name: 'Peter', age: '15', favouriteAnimal: 'cat' });
+		// DBHelper.ReadFromDB(dbPromise, 'keyval', 'hello');
+		// DBHelper.ReadAllFromDB(dbPromise, 'people');
+		// DBHelper.ReadAllInOrderFromDB(dbPromise, 'restaurants', 'reviews');
 	}
+
+	//	============================== With LocalStorage ==============================//
+
+	// /**
+	//  * Save Restaurants
+	//  */
+	// static saveRestaurants(restaurants) {
+	// 	localStorage.setItem('restaurants', restaurants);
+	// }
+
+	// /**
+	//  * Get Restaurants from Local Storage
+	//  */
+	// static getRestaurantsFromLocalStorage(callback) {
+	// 	return localStorage.getItem('restaurants');
+	// }
+
+	// /**
+	//  * Get Restaurants remotelly from the server (DATABASE_URL)
+	//  */
+	// static getRestaurantsFromServer(callback = () => null) {
+	// 	fetch(DBHelper.DATABASE_URL)
+	// 		.then(response => {
+	// 			return response.json();
+	// 		})
+	// 		.then(data => {
+	// 			DBHelper.saveRestaurants(data);
+	// 			callback(null, data);
+	// 		})
+	// 		.catch(err => {
+	// 			const error = `Request failed. Returned status of ${err}`;
+	// 			callback(error, null);
+	// 		});
+	// }
+
+	// /**
+	//  * Fetch all restaurants.
+	//  */
+	// static fetchRestaurants(callback) {
+	// 	fetch(DBHelper.DATABASE_URL)
+	// 		.then(response => {
+	// 			return response.json();
+	// 		})
+	// 		.then(restaurants => {
+	// 			DBHelper.saveRestaurants(restaurants);
+	// 			callback(null, restaurants);
+	// 		})
+	// 		.catch(err => {
+	// 			const error = `Connection to server failed. Returned status of ${err}`;
+	// 			callback(error, null);
+	// 			return DBHelper.getRestaurants()
+	// 				.then(response => {
+	// 					return callback(null, response);
+	// 				})
+	// 				.catch(err => {
+	// 					const error = `Request failed. Returned status of ${err}`;
+	// 					callback(error, null);
+	// 				});
+	// 		});
+	// }
+
+	//=======================================================================================//
 
 	/**
 	 * Fetch a restaurant by its ID.
@@ -305,5 +376,23 @@ class DBHelper {
 			animation: google.maps.Animation.DROP
 		});
 		return marker;
+	}
+
+	//========================== Added to fetch reviews by the IDB ========================== //
+	/**
+	 * Fetch all restaurant reviws by its ID.
+	 */
+	static fetchReviewsById(id, callback) {
+		var dbPromise = DBHelper.OpenDB('restaurant-review-DB');
+		DBHelper.ReadAllFromDB(dbPromise, `reviews-${id}`)
+			.then(data => {
+				if (data.length == 0) {
+					return DBHelper.GetDataFromURL(dbPromise, REVIEW);
+				}
+				return data;
+			})
+			.then(reviews => {
+				callback(null, reviews);
+			});
 	}
 }
