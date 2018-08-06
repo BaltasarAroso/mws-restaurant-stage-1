@@ -22,6 +22,7 @@ self.addEventListener('install', function(event) {
 				'/css/styles.css',
 				'/css/media-queries.css',
 				'/data/restaurants.json',
+				'/favicon.png',
 				'/img/1.jpg',
 				'/img/2.jpg',
 				'/img/3.jpg',
@@ -31,7 +32,9 @@ self.addEventListener('install', function(event) {
 				'/img/7.jpg',
 				'/img/8.jpg',
 				'/img/9.jpg',
-				'/img/10.jpg'
+				'/img/10.jpg',
+				'/img/icons-192.png',
+				'/img/icons-512.png'
 			]);
 		})
 	);
