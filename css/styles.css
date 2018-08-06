@@ -21,7 +21,7 @@ ul {
 	font-size: 10pt;
 }
 a {
-	color: #cc7000;
+	color: #f0a448;
 }
 a,
 a :focus,
@@ -68,7 +68,7 @@ section {
 #footer {
 	-ms-flex-pack: distribute;
 	background-color: #444;
-	color: #aaa;
+	color: rgb(255, 253, 253);
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -185,7 +185,7 @@ nav h1 a {
 	width: 270px;
 }
 #restaurants-list li h2 {
-	color: #cc7000;
+	color: #8b5517;
 	font-family: Arial, sans-serif;
 	font-size: 14pt;
 	font-weight: 200;
@@ -196,7 +196,7 @@ nav h1 a {
 	word-wrap: break-word;
 }
 #restaurants-list li a {
-	background-color: #b35f00;
+	background-color: #8b5517;
 	border-bottom: 3px solid #eee;
 	color: #fff;
 	display: inline-block;
