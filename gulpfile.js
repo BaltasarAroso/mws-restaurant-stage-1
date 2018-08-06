@@ -14,10 +14,7 @@ var gulp = require('gulp'),
 	del = require('del'),
 	browserSync = require('browser-sync').create();
 
-var build = gulp.series(
-	clean,
-	gulp.parallel(styles, css, html, imgs, scripts, scripts_dist, compress, watch)
-);
+var build = gulp.series(clean, styles, scripts, gulp.parallel(css, html, imgs, compress, watch));
 
 var paths = {
 	styles: {
@@ -25,7 +22,7 @@ var paths = {
 		dest: 'css'
 	},
 	css: {
-		src: 'css/*.css',
+		src: 'css/*',
 		dest: 'dist/css'
 	},
 	html: {
@@ -85,25 +82,13 @@ function scripts() {
 			})
 		)
 		.pipe(concat('all.js')) //To implement this is necessary to change the scripts sources in .html
-		.pipe(gulp.dest(paths.scripts.dest));
-}
-
-function scripts_dist() {
-	return gulp
-		.src(paths.scripts.src)
-		.pipe(
-			babel({
-				presets: ['env']
-			})
-		)
-		.pipe(concat('all.js')) //To implement this is necessary to change the scripts sources in .html
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
 function compress() {
 	return gulp
-		.src(paths.scripts.src)
+		.src('dist/js/all.js')
 		.pipe(gzip())
 		.pipe(gulp.dest(paths.scripts.dest));
 }
