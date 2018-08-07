@@ -1,4 +1,4 @@
-const staticCacheName = 'mws-stage1-cache-v2';
+const staticCacheName = 'mws-stage1-cache-v4';
 
 /*
  * Open cache named 'mws-stage1-cache'
@@ -23,7 +23,6 @@ self.addEventListener('install', function(event) {
 				'/css/styles.css',
 				'/css/media-queries.css',
 				'/data/restaurants.json',
-				'/favicon.png',
 				'/img/1.jpg',
 				'/img/2.jpg',
 				'/img/3.jpg',
@@ -82,7 +81,7 @@ self.addEventListener('activate', function(event) {
 						return selfCacheName !== staticCacheName;
 					})
 					.map(function(selfCacheName) {
-						return cache.delete(selfCacheName);
+						return caches.delete(selfCacheName);
 					})
 			);
 		})
