@@ -10,7 +10,7 @@ th {
 body {
 	background-color: #fdfdfd;
 	margin: 0;
-	min-width: 415px;
+	/* min-width: 415px; */
 	overflow-x: hidden;
 	position: relative;
 }
@@ -22,7 +22,6 @@ ul {
 }
 a {
 	color: #f0a448;
-	color: rgb(214, 124, 51);
 }
 a,
 a :focus,
@@ -86,7 +85,7 @@ nav {
 nav {
 	background-color: #252831;
 	height: 5em;
-	min-width: 400px;
+	/* min-width: 400px; */
 	width: 100%;
 }
 nav h1 {
@@ -222,7 +221,7 @@ nav h1 a {
 	word-wrap: break-word;
 }
 .inside {
-	min-width: 415px;
+	/* min-width: 415px; */
 }
 .inside header {
 	border-bottom: 2px solid #fff;

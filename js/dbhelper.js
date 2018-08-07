@@ -1,4 +1,6 @@
-// import idb from 'idb';
+/**
+ * Define variables
+ */
 var RESTAURANT = 1;
 var REVIEW = 0;
 

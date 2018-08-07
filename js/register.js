@@ -4,7 +4,7 @@
 
 if (navigator.serviceWorker) {
 	navigator.serviceWorker
-		.register('/js/sw.js')
+		.register('/sw.js')
 		.then(function() {
 			console.log('Service Worker registration done successfully');
 		})
