@@ -28,16 +28,17 @@ class DBHelper {
 					keyPath: 'id'
 				});
 			}
-			var restaurantStore = upgradeDB.transaction.objectStore('restaurants');
-			restaurantStore.getAll().then(function(results) {
-				for (var i = 1; i <= results.length; i++) {
-					if (!upgradeDB.objectStoreNames.contains(`reviews-${i}`)) {
-						upgradeDB.createObjectStore(`reviews-${i}`, {
-							keyPath: 'id'
-						});
-					}
+			// var restaurantStore = upgradeDB.transaction.objectStore('restaurants');
+			// restaurantStore.getAll().then(function(results) {
+			// results.length = 10
+			for (var i = 1; i <= 10; i++) {
+				if (!upgradeDB.objectStoreNames.contains(`reviews-${i}`)) {
+					upgradeDB.createObjectStore(`reviews-${i}`, {
+						keyPath: 'id'
+					});
 				}
-			});
+			}
+			// });
 		});
 	}
 
