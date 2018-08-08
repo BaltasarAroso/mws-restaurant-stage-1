@@ -24,7 +24,7 @@
         <a id="homepage_title" href="/">Restaurant Reviews</a>
       </h1>
     </nav>
-    <ul id="breadcrumb">
+    <ul id="breadcrumb" role="navigation" aria-label="Breadcrumb">
       <li>
         <a href="/">Home</a>
       </li>
@@ -33,10 +33,10 @@
 
   <main id="maincontent">
     <section id="map-container">
-      <div id="map"></div>
+      <div id="map" role="application" aria-hidden="true" aria-label="Google Maps showing the restaurant address."></div>
     </section>
     <section id="restaurant-container">
-      <h1 id="restaurant-name" tabindex="0"></h1>
+      <h2 id="restaurant-name" tabindex="0"></h2>
       <img id="restaurant-img" tabindex="0">
       <p id="restaurant-cuisine" tabindex="0"></p>
       <p id="restaurant-address" tabindex="0"></p>
