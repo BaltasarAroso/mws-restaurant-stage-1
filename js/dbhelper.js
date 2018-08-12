@@ -14,7 +14,7 @@ class DBHelper {
 	 */
 	static get DATABASE_URL() {
 		const port = 1337; // Change this to your server port
-		return `http://localhost:${port}/restaurants`;
+		return `http://localhost:${port}`;
 	}
 
 	//============================ Configure IndexedDB functions ============================//
@@ -28,6 +28,7 @@ class DBHelper {
 					keyPath: 'id'
 				});
 			}
+
 			// var restaurantStore = upgradeDB.transaction.objectStore('restaurants');
 			// restaurantStore.getAll().then(function(results) {
 			// results.length = 10
@@ -38,12 +39,18 @@ class DBHelper {
 					});
 				}
 			}
-			// });
+
+			// if (!upgradeDB.objectStoreNames.contains('reviews')) {
+			// 	var reviewsStore = upgradeDB.createObjectStore('reviews', {
+			// 		keyPath: 'id'
+			// 	});
+			// 	reviewsStore.createIndex('restaurant_id', 'restaurant_id');
+			// }
 		});
 	}
 
 	/**
-	 * Read From IndexedDB
+	 * Read All From IndexedDB
 	 */
 	static ReadAllFromDB(dbElementName) {
 		return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
@@ -53,6 +60,18 @@ class DBHelper {
 		});
 	}
 
+	// /**
+	//  * Read From IndexedDB
+	//  */
+	// static ReadIdFromDB(dbElementName, order, id) {
+	// 	return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
+	// 		var tx = db.transaction(dbElementName);
+	// 		var objStore = tx.objectStore(dbElementName);
+	// 		var objIndex = objStore.index(order);
+	// 		return objIndex.get(id);
+	// 	});
+	// }
+
 	/**
 	 * Write/Save to IndexedDB
 	 */
@@ -60,8 +79,10 @@ class DBHelper {
 		return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
 			var tx = db.transaction(dbElementName, 'readwrite');
 			var objStore = tx.objectStore(dbElementName);
+			console.log(data);
 			// tag = 1 means 'restaurants' objStore and tag = 0 means 'reviews' objStore
-			tag ? Array.from(data).forEach(item => objStore.put(item)) : objStore.put(data);
+			// tag ? Array.from(data).forEach(item => objStore.put(item)) : objStore.put(data);
+			Array.from(data).forEach(item => objStore.put(item));
 			return tx.complete;
 		});
 	}
@@ -70,21 +91,28 @@ class DBHelper {
 	 * Get Data From URL
 	 */
 	static GetDataFromURL(tag) {
-		return fetch(DBHelper.DATABASE_URL)
-			.then(response => {
-				return response.json();
-			})
-			.then(data => {
-				if (tag) {
+		if (tag) {
+			return fetch(`${DBHelper.DATABASE_URL}/restaurants`)
+				.then(response => {
+					return response.json();
+				})
+				.then(data => {
 					DBHelper.WriteToDB(data, 'restaurants', RESTAURANT);
-				} else {
+					// callback(null, data);
+					return data;
+				});
+		} else {
+			return fetch(`${DBHelper.DATABASE_URL}/reviews?restaurant_id=${self.restaurant.id}`)
+				.then(response => {
+					return response.json();
+				})
+				.then(data => {
 					DBHelper.WriteToDB(data, `reviews-${self.restaurant.id}`, REVIEW);
 					console.log(`Reviews data from API for restaurant: ${self.restaurant.id}`);
-					console.log(data);
-				}
-				// callback(null, data);
-				return data;
-			});
+					// callback(null, data);
+					return data;
+				});
+		}
 	}
 	//========================================================================================//
 
