@@ -52,7 +52,7 @@ class DBHelper {
 	/**
 	 * Write/Save to IndexedDB
 	 */
-	static WriteToDB(data, dbElementName, tag) {
+	static WriteToDB(data, dbElementName) {
 		return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
 			var tx = db.transaction(dbElementName, 'readwrite');
 			var objStore = tx.objectStore(dbElementName);
@@ -71,7 +71,7 @@ class DBHelper {
 					return response.json();
 				})
 				.then(data => {
-					DBHelper.WriteToDB(data, 'restaurants', RESTAURANT);
+					DBHelper.WriteToDB(data, 'restaurants');
 					return data;
 				});
 		} else {
@@ -80,7 +80,7 @@ class DBHelper {
 					return response.json();
 				})
 				.then(data => {
-					DBHelper.WriteToDB(data, `reviews-${self.restaurant.id}`, REVIEW);
+					DBHelper.WriteToDB(data, `reviews-${self.restaurant.id}`);
 					return data;
 				});
 		}
