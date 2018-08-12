@@ -1,2 +1,61 @@
-@media screen and (max-width:670px){.inside #map-container{height:200px;margin:20px;position:relative;width:auto}#restaurant-container{border-top:2px solid #fff;margin-top:140px;width:auto}#reviews-container{width:auto}}@media screen and (min-width:670px) and (max-width:900px){.inside #map-container{height:370px;margin:20px;position:relative;width:auto}#restaurant-cuisine,#restaurant-img{width:600px}#restaurant-container{border-top:2px solid #fff;margin-top:140px;width:auto}#reviews-container{width:auto}#reviews-list{-ms-flex-pack:center;-ms-flex-wrap:wrap;-webkit-box-pack:center;display:-webkit-box;display:-ms-flexbox;display:flex;flex-wrap:wrap;justify-content:center}#reviews-list li{float:left;margin:10px;width:calc(50% - 25px)}}@media screen and (min-width:900px){.inside #map-container{width:calc(100vw - 500px)}#restaurant-container,#reviews-container{width:420px}}
+@media screen and (max-width: 670px) {
+	.inside #map-container {
+		height: 200px;
+		margin: 20px;
+		position: relative;
+		width: auto;
+	}
+	#restaurant-container {
+		border-top: 2px solid #fff;
+		margin-top: 140px;
+		width: auto;
+	}
+	#reviews-container {
+		width: auto;
+	}
+}
+@media screen and (min-width: 670px) and (max-width: 900px) {
+	.inside #map-container {
+		height: 370px;
+		margin: 20px;
+		position: relative;
+		width: auto;
+	}
+	#restaurant-cuisine,
+	#restaurant-img {
+		width: 600px;
+	}
+	#restaurant-container {
+		border-top: 2px solid #fff;
+		margin-top: 140px;
+		width: auto;
+	}
+	#reviews-container {
+		width: auto;
+	}
+	#reviews-list {
+		-ms-flex-pack: center;
+		-ms-flex-wrap: wrap;
+		-webkit-box-pack: center;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+	#reviews-list li {
+		float: left;
+		margin: 10px;
+		width: calc(50% - 25px);
+	}
+}
+@media screen and (min-width: 900px) {
+	.inside #map-container {
+		width: calc(100vw - 500px);
+	}
+	#restaurant-container,
+	#reviews-container {
+		width: 420px;
+	}
+}
 /*# sourceMappingURL=media-queries.css.map */

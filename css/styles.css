@@ -10,7 +10,6 @@ th {
 body {
 	background-color: #fdfdfd;
 	margin: 0;
-	/* min-width: 415px; */
 	overflow-x: hidden;
 	position: relative;
 }
@@ -85,7 +84,6 @@ nav {
 nav {
 	background-color: #252831;
 	height: 5em;
-	/* min-width: 400px; */
 	width: 100%;
 }
 nav h1 {
@@ -220,9 +218,6 @@ nav h1 a {
 	margin: 0;
 	word-wrap: break-word;
 }
-.inside {
-	/* min-width: 415px; */
-}
 .inside header {
 	border-bottom: 2px solid #fff;
 	position: fixed;
@@ -295,9 +290,22 @@ nav h1 a {
 	letter-spacing: -1px;
 	margin-bottom: 0.75em;
 }
+#review-add,
 #reviews-list {
 	margin: 0;
 	padding: 0;
+}
+#review-form {
+	background-color: #fff;
+	border: 2px solid #f3f3f3;
+	border-radius: 20px 0 20px 0;
+	display: flex;
+	flex-direction: column;
+	list-style-type: none;
+	margin: 0 0 30px;
+	overflow: hidden;
+	position: relative;
+	width: auto;
 }
 #reviews-list li {
 	background-color: #fff;
@@ -310,17 +318,7 @@ nav h1 a {
 	position: relative;
 	width: auto;
 }
-#reviews-list li h3 {
-	border-radius: 5px;
-	display: inline-block;
-	font-size: 10pt;
-	margin: 10px 20px;
-	padding: 5px;
-}
-#reviews-list li p {
-	color: #4b4c4e;
-	margin: 0 20px 10px;
-}
+#review-form-header,
 #reviews-list section {
 	-ms-flex-direction: row;
 	-ms-flex-pack: justify;
@@ -335,18 +333,62 @@ nav h1 a {
 	justify-content: space-between;
 	padding: 15px;
 }
-#reviews-list section .name {
+#review-form-header-name {
+	color: rgb(0, 0, 0);
+	font-size: 12pt;
+	font-weight: 700;
+	margin: 0;
+}
+#reviews-list-name {
 	color: #fff;
 	font-size: 12pt;
 	font-weight: 700;
 	margin: 0;
 }
-#reviews-list section .date {
+#review-form-header-date,
+#reviews-list-date {
 	color: #b7b8b9;
 	font-size: 8pt;
 	margin: auto 0;
 }
+#review-form-rating-title {
+	display: flex;
+	flex-direction: row;
+}
+#review-form-rating-title p {
+	color: #cc7000;
+	margin: 10px 0px 10px 20px;
+	font-weight: bold;
+}
+#review-form-rating {
+	width: 10%;
+	border-radius: 5px;
+	display: inline-block;
+	font-size: 10pt;
+	margin: 10px;
+	padding: 5px;
+}
+#reviews-list-rating {
+	border-radius: 5px;
+	display: inline-block;
+	font-size: 10pt;
+	margin: 10px 20px;
+	padding: 5px;
+}
+#review-form-comments,
+#reviews-list-comments {
+	color: #4b4c4e;
+	margin: 0 20px 10px;
+}
 #restaurant-hours td {
 	color: #666;
+}
+#review-form-submit-button {
+	align-self: flex-end;
+	width: 25%;
+	margin: 0 18px 18px;
+	padding: 10px;
+	border-radius: 5px;
+	background-color: #e78c1c;
 }
 /*# sourceMappingURL=styles.css.map */

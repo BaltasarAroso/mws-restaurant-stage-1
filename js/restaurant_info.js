@@ -99,7 +99,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 		fillRestaurantHoursHTML();
 	}
 	// fill reviews
-	// fillReviewsHTML();
 	fetchReviewsFromURL();
 };
 
@@ -148,27 +147,100 @@ fillReviewsHTML = (reviews = self.reviews) => {
 };
 
 /**
+ * Create date review
+ */
+createDateReview = date => {
+	var dateTime = new Date(date);
+	var month = '';
+	switch (dateTime.getMonth() + 1) {
+		case 1:
+			month = 'January';
+			break;
+		case 2:
+			month = 'February';
+			break;
+		case 3:
+			month = 'March';
+			break;
+		case 4:
+			month = 'April';
+			break;
+		case 5:
+			month = 'May';
+			break;
+		case 6:
+			month = 'June';
+			break;
+		case 7:
+			month = 'July';
+			break;
+		case 8:
+			month = 'August';
+			break;
+		case 9:
+			month = 'September';
+			break;
+		case 10:
+			month = 'October';
+			break;
+		case 11:
+			month = 'November';
+			break;
+		case 12:
+			month = 'December';
+			break;
+		default:
+			console.log('ERROR: Date of the review not correct.');
+			exit();
+	}
+	return (
+		dateTime.getDate().toString() +
+		' ' +
+		month +
+		' ' +
+		dateTime.getFullYear().toString() +
+		', ' +
+		dateTime.getHours().toString() +
+		':' +
+		dateTime
+			.getMinutes()
+			.toString()
+			.padStart(2, '0')
+	);
+};
+
+/**
+ * Add actual date to new review
+ */
+dateNewReview = () => {
+	document.getElementById('review-form-header-date').innerHTML = createDateReview(Date(Date.now()));
+};
+
+/**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = review => {
+	dateNewReview();
+
 	const li = document.createElement('li');
 	const section = document.createElement('section');
 	li.appendChild(section);
 
 	const name = document.createElement('p');
 	name.innerHTML = review.name;
-	name.className = 'name';
+	name.id = 'reviews-list-name';
 	section.appendChild(name);
 	name.tabIndex = '0';
 
 	const date = document.createElement('p');
-	date.innerHTML = review.date;
-	date.className = 'date';
+	date.innerHTML = createDateReview(review.updatedAt);
+	date.id = 'reviews-list-date';
 	section.appendChild(date);
 	date.tabIndex = '0';
 
 	const rating = document.createElement('h3');
 	rating.innerHTML = `Rating: ${review.rating}`;
+	rating.id = 'reviews-list-rating';
 	if (review.rating < 2) {
 		rating.style.backgroundColor = '#a72a2a';
 	} else if (review.rating <= 3) {
@@ -185,6 +257,7 @@ createReviewHTML = review => {
 
 	const comments = document.createElement('p');
 	comments.innerHTML = review.comments;
+	comments.id = 'reviews-list-comments';
 	li.appendChild(comments);
 	comments.tabIndex = '0';
 
