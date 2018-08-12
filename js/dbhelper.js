@@ -28,10 +28,6 @@ class DBHelper {
 					keyPath: 'id'
 				});
 			}
-
-			// var restaurantStore = upgradeDB.transaction.objectStore('restaurants');
-			// restaurantStore.getAll().then(function(results) {
-			// results.length = 10
 			for (var i = 1; i <= 10; i++) {
 				if (!upgradeDB.objectStoreNames.contains(`reviews-${i}`)) {
 					upgradeDB.createObjectStore(`reviews-${i}`, {
@@ -39,13 +35,6 @@ class DBHelper {
 					});
 				}
 			}
-
-			// if (!upgradeDB.objectStoreNames.contains('reviews')) {
-			// 	var reviewsStore = upgradeDB.createObjectStore('reviews', {
-			// 		keyPath: 'id'
-			// 	});
-			// 	reviewsStore.createIndex('restaurant_id', 'restaurant_id');
-			// }
 		});
 	}
 
@@ -60,18 +49,6 @@ class DBHelper {
 		});
 	}
 
-	// /**
-	//  * Read From IndexedDB
-	//  */
-	// static ReadIdFromDB(dbElementName, order, id) {
-	// 	return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
-	// 		var tx = db.transaction(dbElementName);
-	// 		var objStore = tx.objectStore(dbElementName);
-	// 		var objIndex = objStore.index(order);
-	// 		return objIndex.get(id);
-	// 	});
-	// }
-
 	/**
 	 * Write/Save to IndexedDB
 	 */
@@ -79,9 +56,6 @@ class DBHelper {
 		return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
 			var tx = db.transaction(dbElementName, 'readwrite');
 			var objStore = tx.objectStore(dbElementName);
-			console.log(data);
-			// tag = 1 means 'restaurants' objStore and tag = 0 means 'reviews' objStore
-			// tag ? Array.from(data).forEach(item => objStore.put(item)) : objStore.put(data);
 			Array.from(data).forEach(item => objStore.put(item));
 			return tx.complete;
 		});
@@ -98,7 +72,6 @@ class DBHelper {
 				})
 				.then(data => {
 					DBHelper.WriteToDB(data, 'restaurants', RESTAURANT);
-					// callback(null, data);
 					return data;
 				});
 		} else {
@@ -108,8 +81,6 @@ class DBHelper {
 				})
 				.then(data => {
 					DBHelper.WriteToDB(data, `reviews-${self.restaurant.id}`, REVIEW);
-					console.log(`Reviews data from API for restaurant: ${self.restaurant.id}`);
-					// callback(null, data);
 					return data;
 				});
 		}
