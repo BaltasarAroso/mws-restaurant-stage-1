@@ -21,7 +21,7 @@ class DBHelper {
 	/**
 	 * Open IndexedDB
 	 */
-	static OpenDB(name) {
+	static openDB(name) {
 		return idb.open(name, 1, function(upgradeDB) {
 			if (!upgradeDB.objectStoreNames.contains('restaurants')) {
 				upgradeDB.createObjectStore('restaurants', {
@@ -35,14 +35,19 @@ class DBHelper {
 					});
 				}
 			}
+			if (!upgradeDB.objectStoreNames.contains('reviews-on-hold')) {
+				upgradeDB.createObjectStore('reviews-on-hold', {
+					keyPath: 'updatedAt'
+				});
+			}
 		});
 	}
 
 	/**
 	 * Read All From IndexedDB
 	 */
-	static ReadAllFromDB(dbElementName) {
-		return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
+	static readAllFromDB(dbElementName) {
+		return DBHelper.openDB('restaurant-review-DB').then(function(db) {
 			var tx = db.transaction(dbElementName);
 			var objStore = tx.objectStore(dbElementName);
 			return objStore.getAll();
@@ -52,11 +57,23 @@ class DBHelper {
 	/**
 	 * Write/Save to IndexedDB
 	 */
-	static WriteToDB(data, dbElementName) {
-		return DBHelper.OpenDB('restaurant-review-DB').then(function(db) {
+	static writeToDB(data, dbElementName, ReviewOnHold) {
+		return DBHelper.openDB('restaurant-review-DB').then(function(db) {
 			var tx = db.transaction(dbElementName, 'readwrite');
 			var objStore = tx.objectStore(dbElementName);
-			Array.from(data).forEach(item => objStore.put(item));
+			ReviewOnHold ? objStore.put(data) : Array.from(data).forEach(item => objStore.put(item));
+			return tx.complete;
+		});
+	}
+
+	/**
+	 * Delete All From IDB
+	 */
+	static deleteAllFromDB(dbElementName) {
+		return DBHelper.openDB('restaurant-review-DB').then(function(db) {
+			var tx = db.transaction(dbElementName, 'readwrite');
+			var objStore = tx.objectStore(dbElementName);
+			objStore.clear();
 			return tx.complete;
 		});
 	}
@@ -64,14 +81,14 @@ class DBHelper {
 	/**
 	 * Get Data From URL
 	 */
-	static GetDataFromURL(tag) {
+	static getDataFromURL(tag) {
 		if (tag) {
 			return fetch(`${DBHelper.DATABASE_URL}/restaurants`)
 				.then(response => {
 					return response.json();
 				})
 				.then(data => {
-					DBHelper.WriteToDB(data, 'restaurants');
+					DBHelper.writeToDB(data, 'restaurants', false);
 					return data;
 				});
 		} else {
@@ -80,21 +97,53 @@ class DBHelper {
 					return response.json();
 				})
 				.then(data => {
-					DBHelper.WriteToDB(data, `reviews-${self.restaurant.id}`);
+					DBHelper.writeToDB(data, `reviews-${self.restaurant.id}`, false);
 					return data;
 				});
 		}
 	}
 	//========================================================================================//
 
+	//================================ Configure POST Reviews ================================//
+
+	/**
+	 * POST New Review to API and respective DB
+	 */
+	static postNewReview(review) {
+		if (!review) {
+			return;
+		}
+
+		return fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+			/* POSTing the new review to API */
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(review)
+		})
+			.then(response => response.json())
+			.then(data => {
+				/* Besides adding to API we need to save the review in the respectivelly IDB */
+				DBHelper.writeToDB(data, `reviews-${self.restaurant.id}`, true);
+				return data;
+			})
+			.catch(err => {
+				/* In Offline mode we need to save the review in the IDB reviews-on-hold */
+				DBHelper.writeToDB(review, 'reviews-on-hold', true);
+				console.log(`ERROR: Review on hold due to ${err}`);
+				return review;
+			});
+	}
+
+	//========================================================================================//
+
 	/**
 	 * Fetch all restaurants.
 	 */
 	static fetchRestaurants(callback) {
-		DBHelper.ReadAllFromDB('restaurants')
+		DBHelper.readAllFromDB('restaurants')
 			.then(data => {
 				if (data.length == 0) {
-					return DBHelper.GetDataFromURL(RESTAURANT);
+					return DBHelper.getDataFromURL(RESTAURANT);
 				}
 				return data;
 			})
@@ -254,15 +303,25 @@ class DBHelper {
 	 * Fetch all restaurant reviews by its ID.
 	 */
 	static fetchReviewsById(id, callback) {
-		DBHelper.ReadAllFromDB(`reviews-${id}`)
+		DBHelper.readAllFromDB(`reviews-${id}`)
 			.then(data => {
 				if (data.length == 0) {
-					return DBHelper.GetDataFromURL(REVIEW);
+					return DBHelper.getDataFromURL(REVIEW);
 				}
 				return data;
 			})
 			.then(reviews => {
 				callback(null, reviews);
 			});
+
+		/* Fetch the reviews added in offline mode in the 'on hold' IDB */
+		DBHelper.readAllFromDB('reviews-on-hold')
+			.then(data => {
+				return data;
+			})
+			.then(reviews => {
+				callback(null, reviews);
+			});
+		// TODO: Remove Reviews Header extra
 	}
 }

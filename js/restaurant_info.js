@@ -2,6 +2,36 @@ let restaurant;
 var map;
 
 /**
+ * Fetch offline reviews as soon as the page is loaded in online mode.
+ */
+document.addEventListener('DOMContentLoaded', event => {
+	DBHelper.readAllFromDB('reviews-on-hold')
+		.then(data => {
+			if (data.length == 0) {
+				return;
+			}
+			checkConnection(data);
+			return data;
+		})
+		.catch(err => {
+			console.log(`ERROR: Load from reviews on hold DB failed due to ${err}`);
+		});
+});
+
+/**
+ * Check Connection, POST offline data to API and Delete it from the 'on hold' IDB
+ */
+checkConnection = data => {
+	if (navigator.connection.downlink != 0) {
+		data.forEach(review => {
+			DBHelper.postNewReview(review).then(function() {
+				DBHelper.deleteAllFromDB('reviews-on-hold');
+			});
+		});
+	}
+};
+
+/**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
@@ -126,6 +156,8 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.reviews) => {
+	dateNewReview();
+
 	const container = document.getElementById('reviews-container');
 	const title = document.createElement('h2');
 	title.innerHTML = 'Reviews';
@@ -134,16 +166,24 @@ fillReviewsHTML = (reviews = self.reviews) => {
 
 	if (!reviews) {
 		const noReviews = document.createElement('p');
-		noReviews.classList.add('no-reviews');
+		// noReviews.classList.add('no-reviews');
 		noReviews.innerHTML = 'No reviews yet!';
 		container.appendChild(noReviews);
 		return;
 	}
 	const ul = document.getElementById('reviews-list');
 	reviews.forEach(review => {
-		ul.appendChild(createReviewHTML(review));
+		appendReviewToList(review);
 	});
 	container.appendChild(ul);
+};
+
+/**
+ * Append Reviews to reviews-list
+ */
+appendReviewToList = review => {
+	const ul = document.getElementById('reviews-list');
+	ul.appendChild(createReviewHTML(review));
 };
 
 /**
@@ -191,7 +231,7 @@ createDateReview = date => {
 			break;
 		default:
 			console.log('ERROR: Date of the review not correct.');
-			exit();
+			break;
 	}
 	return (
 		dateTime.getDate().toString() +
@@ -200,7 +240,10 @@ createDateReview = date => {
 		' ' +
 		dateTime.getFullYear().toString() +
 		', ' +
-		dateTime.getHours().toString() +
+		dateTime
+			.getHours()
+			.toString()
+			.padStart(2, '0') +
 		':' +
 		dateTime
 			.getMinutes()
@@ -220,8 +263,6 @@ dateNewReview = () => {
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = review => {
-	dateNewReview();
-
 	const li = document.createElement('li');
 	const section = document.createElement('section');
 	li.appendChild(section);
@@ -285,3 +326,38 @@ getParameterByName = (name, url = window.location.href) => {
 	if (!results[2]) return '';
 	return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+//================================ Configure POST Reviews ================================//
+
+/**
+ * Submit the new review
+ */
+submitNewReview = () => {
+	const form = document.querySelector('#review-form');
+	form.addEventListener('submit', event => {
+		event.preventDefault();
+		const name = form.querySelector('#review-form-header-name');
+		const rating = form.querySelector('#review-form-rating');
+		const comments = form.querySelector('#review-form-comments');
+
+		const newReview = {
+			restaurant_id: getParameterByName('id'),
+			name: name.value.replace(/[^A-Za-z0-9 ´`~^,.?!]/gi, ''),
+			rating: rating.value,
+			comments: comments.value.replace(/[^A-Za-z0-9 ´`~^ºª@&#+-,.?!]/gi, ''),
+			createdAt: Date.now(),
+			updatedAt: Date.now()
+		};
+
+		DBHelper.postNewReview(newReview).then(function() {
+			name.value = '';
+			rating.value = 1;
+			comments.value = '';
+
+			appendReviewToList(newReview);
+			document.getElementById('review-end').innerHTML = 'Review Successfully submitted!';
+		});
+	});
+};
+
+submitNewReview();
