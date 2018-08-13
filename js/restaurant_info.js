@@ -37,6 +37,12 @@ submitNewReview = () => {
 
 			appendReviewToList(newReview);
 			document.getElementById('review-end').innerHTML = 'Review Successfully submitted!';
+			if (navigator.connection.downlink == 0) {
+				alert(
+					'User in Offline Mode.\n' +
+						'Submitted review will be added to API when online, now it is only added to a temporary IDB.'
+				);
+			}
 		});
 	});
 };

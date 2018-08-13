@@ -127,7 +127,6 @@ class DBHelper {
 				return data;
 			})
 			.catch(err => {
-				console.log(review);
 				// if (navigator.serviceWorker) {
 				console.log('NOTE: Adding new reviews to IDB on hold');
 
