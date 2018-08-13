@@ -4,12 +4,11 @@ const staticCacheName = 'mws-stage1-cache-v4';
  * Open cache named 'mws-stage1-cache'
  * Add cache all the urls needed in this project
  */
-
 self.addEventListener('install', function(event) {
-	console.log('Service Worker in the installing mode...');
+	// console.log('Service Worker in the installing mode...');
 	event.waitUntil(
 		caches.open(staticCacheName).then(function(cache) {
-			console.log('Service Worker caching all the urls');
+			// console.log('Service Worker caching all the urls');
 			return cache.addAll([
 				'/',
 				'/index.html',
@@ -44,16 +43,15 @@ self.addEventListener('install', function(event) {
  * Respond with an entry from the cache if there is one
  * If there isn't, fetch from the network
  */
-
 self.addEventListener('fetch', function(event) {
-	console.log('Service Worker in the fetching mode...');
+	// console.log('Service Worker in the fetching mode...');
 	event.respondWith(
 		caches.open(staticCacheName).then(cache => {
 			return cache.match(event.request).then(function(response) {
-				console.log(
-					'Service Worker fetching the responses or ' +
-						'just the event requests (if there is no responses aka offline mode)'
-				);
+				// console.log(
+				// 	'Service Worker fetching the responses or ' +
+				// 		'just the event requests (if there is no responses aka offline mode)'
+				// );
 				return (
 					response ||
 					fetch(event.request).then(function(response) {
@@ -72,7 +70,7 @@ self.addEventListener('fetch', function(event) {
  * (the checkbox of the inspector in the browser is no longer needed)
  */
 self.addEventListener('activate', function(event) {
-	console.log('Service Worker in the activating mode...');
+	// console.log('Service Worker in the activating mode...');
 	event.waitUntil(
 		caches.keys().then(function(cacheNames) {
 			return Promise.all(
@@ -87,3 +85,25 @@ self.addEventListener('activate', function(event) {
 		})
 	);
 });
+
+// /**
+//  * Sync the service worker
+//  */
+// self.addEventListener('sync', function(event) {
+// 	console.log('service worker sync...');
+// 	if (event.tag === 'sync-new-reviews') {
+// 		event.waitUntil(syncUnpostedReviews({ action: 'reviews-do-sync' }));
+// 	}
+// });
+
+// /**
+//  * Sync Function that match the unposted reviews
+//  */
+// function syncUnpostedReviews(message) {
+// 	console.log('syncUnpostedReviews');
+// 	return clients.matchAll().then(clients => {
+// 		clients.forEach(client => {
+// 			client.postMessage(message);
+// 		});
+// 	});
+// }

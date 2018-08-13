@@ -127,10 +127,50 @@ class DBHelper {
 				return data;
 			})
 			.catch(err => {
+				console.log(review);
+				// if (navigator.serviceWorker) {
+				console.log('NOTE: Adding new reviews to IDB on hold');
+
 				/* In Offline mode we need to save the review in the IDB reviews-on-hold */
 				DBHelper.writeToDB(review, 'reviews-on-hold', true);
+				// navigator.serviceWorker.ready.then(reg => reg.sync.register('sync-new-reviews'));
+
 				console.log(`ERROR: Review on hold due to ${err}`);
 				return review;
+				// }
+			});
+	}
+
+	/**
+	 * Check Connection, POST offline data to API and Delete it from the 'on hold' IDB
+	 */
+	static checkConnection(review) {
+		console.log('In checkConnection...');
+		if (navigator.connection.downlink != 0) {
+			delete review.id;
+			DBHelper.postNewReview(review).then(function() {
+				DBHelper.deleteAllFromDB('reviews-on-hold');
+			});
+		}
+	}
+
+	/**
+	 * POST Stored Reviews in offline mode to API and IDB
+	 */
+	static postStoredReviews() {
+		console.log('In postStoredReviews...');
+		DBHelper.readAllFromDB('reviews-on-hold')
+			.then(data => {
+				if (data.length == 0) {
+					return;
+				}
+				data.forEach(review => {
+					DBHelper.checkConnection(review);
+				});
+				return data;
+			})
+			.catch(err => {
+				console.log(`ERROR: Load from reviews on hold DB failed due to ${err}`);
 			});
 	}
 
