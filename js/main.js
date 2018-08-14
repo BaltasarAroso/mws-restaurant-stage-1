@@ -145,8 +145,9 @@ createRestaurantHTML = restaurant => {
 
 	const image = document.createElement('img');
 	image.classList.add('restaurant-img');
-	image.src = DBHelper.imageUrlForRestaurant(restaurant);
+	image.dataset.src = DBHelper.imageUrlForRestaurant(restaurant);
 	image.alt = restaurant.photograph_alt;
+	observer.observe(image);
 	li.append(image);
 
 	const name = document.createElement('h2');
@@ -183,3 +184,14 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 		self.markers.push(marker);
 	});
 };
+
+/**
+ * Implement Intersection Observer considering intersections
+ */
+const observer = new IntersectionObserver(entries => {
+	entries.forEach(entry => {
+		if (!entry.isIntersecting) return;
+		entry.target.src = entry.target.dataset.src;
+		observer.unobserve(entry.target);
+	});
+});

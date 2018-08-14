@@ -1,4 +1,4 @@
-const staticCacheName = 'mws-stage1-cache-v4';
+const staticCacheName = 'mws-stage1-cache-v7';
 
 /*
  * Open cache named 'mws-stage1-cache'
@@ -14,26 +14,24 @@ self.addEventListener('install', function(event) {
 				'/index.html',
 				'/restaurant.html',
 				'/sw.js',
-				'/js/idb.js',
-				'/js/dbhelper.js',
-				'/js/main.js',
-				'/js/restaurant_info.js',
-				'/js/register.js',
-				'/css/styles.css',
-				'/css/media-queries.css',
-				'/data/restaurants.json',
-				'/img/1.jpg',
-				'/img/2.jpg',
-				'/img/3.jpg',
-				'/img/4.jpg',
-				'/img/5.jpg',
-				'/img/6.jpg',
-				'/img/7.jpg',
-				'/img/8.jpg',
-				'/img/9.jpg',
-				'/img/10.jpg',
-				'/img/icons-192.png',
-				'/img/icons-512.png'
+				'/dist/js/idb.js',
+				'/dist/js/dbhelper.js',
+				'/dist/js/main.js',
+				'/dist/js/restaurant_info.js',
+				'/dist/js/register.js',
+				'/dist/css/styles.css',
+				'/dist/img/1.webp',
+				'/dist/img/2.webp',
+				'/dist/img/3.webp',
+				'/dist/img/4.webp',
+				'/dist/img/5.webp',
+				'/dist/img/6.webp',
+				'/dist/img/7.webp',
+				'/dist/img/8.webp',
+				'/dist/img/9.webp',
+				'/dist/img/10.webp',
+				'/dist/img/icons-192.webp',
+				'/dist/img/icons-512.webp'
 			]);
 		})
 	);

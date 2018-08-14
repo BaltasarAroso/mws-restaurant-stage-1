@@ -425,7 +425,7 @@ class DBHelper {
 		if (!image) {
 			image = 10;
 		}
-		return `../img/${image}.jpg`;
+		return `../dist/img/${image}.webp`;
 	}
 
 	/**

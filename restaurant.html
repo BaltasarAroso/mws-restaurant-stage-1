@@ -15,19 +15,26 @@
         href="/manifest.json">
   <link rel="icon"
         href="/favicon.ico">
+  <!-- Add icon library -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet"
         src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
   <link rel="stylesheet"
-        href="css/styles.css"
+        href="dist/css/styles.css"
         type="text/css">
-  <link rel="stylesheet"
-        href="css/media-queries.css"
-        type="text/css">
-  <!-- Add icon library -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Preload Scripts -->
+  <link rel="preload"
+        href="dist/js/restaurant_info.js"
+        as="script">
+  <link rel="preload"
+        href="dist/js/dbhelper.js"
+        as="script">
+  <link rel="preload"
+        href="dist/js/register.js"
+        as="script">
   <title>Restaurant Info</title>
 </head>
 
@@ -128,18 +135,23 @@
   </footer>
 
   <!-- Service Worker files -->
-  <script type="text/javascript"
-          src="js/register.js"></script>
-  <script type="text/javascript"
-          src="sw.js"></script>
+  <script async
+          type="application/javascript"
+          src="dist/js/register.js"></script>
+  <script async
+          type="application/javascript"
+          src="/sw.js"></script>
   <!-- Database helpers -->
-  <script type="text/javascript"
-          src="js/idb.js"></script>
-  <script type="text/javascript"
-          src="js/dbhelper.js"></script>
+  <script async
+          type="text/javascript"
+          src="dist/js/idb.js"></script>
+  <script async
+          type="application/javascript"
+          src="dist/js/dbhelper.js"></script>
   <!-- Main javascript file -->
-  <script type="text/javascript"
-          src="js/restaurant_info.js"></script>
+  <script async
+          type="application/javascript"
+          src="dist/js/restaurant_info.js"></script>
   <!-- Google Maps -->
   <script async
           defer
