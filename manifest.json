@@ -1,6 +1,10 @@
 {
-	"short_name": "FoodReviews",
 	"name": "Restuarants Reviews App",
+	"short_name": "FoodReviews",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#f0a448",
+	"theme_color": "#f0a448",
 	"icons": [
 		{
 			"src": "dist/img/icons-192.webp",
@@ -12,9 +16,5 @@
 			"type": "image/webp",
 			"sizes": "512x512"
 		}
-	],
-	"start_url": "/",
-	"background_color": "#f0a448",
-	"display": "standalone",
-	"theme_color": "#f0a448"
+	]
 }
