@@ -126,7 +126,7 @@ class DBHelper {
 			.then(response => response.json())
 			.then(data => {
 				// Besides adding to API we need to save the review in the respectivelly IDB
-				DBHelper.writeToDB(data, `reviews-${self.restaurant.id}`, true);
+				DBHelper.writeToDB(data, `reviews-${data.restaurant_id}`, true);
 				return data;
 			})
 			.catch(error => {

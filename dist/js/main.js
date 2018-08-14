@@ -10,6 +10,8 @@ var markers = [];
 document.addEventListener('DOMContentLoaded', () => {
 	fetchNeighborhoods();
 	fetchCuisines();
+	const mapButton = document.getElementById('map-button');
+	mapButton.addEventListener('click', initMap);
 });
 
 /**
@@ -83,6 +85,22 @@ window.initMap = () => {
 		scrollwheel: false
 	});
 	updateRestaurants();
+
+	const mapButton = document.getElementById('map-button');
+	mapButton.innerHTML = 'Show Map';
+	mapButton.addEventListener('click', () => {
+		openMainMap();
+	});
+};
+
+/**
+ * Open main map
+ */
+openMainMap = () => {
+	const map = document.getElementById('map');
+	const mapButton = document.getElementById('map-button');
+	map.classList.add('open');
+	mapButton.remove();
 };
 
 /**
