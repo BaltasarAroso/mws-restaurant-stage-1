@@ -52,21 +52,22 @@ class DBHelper {
 	 * Read All From IndexedDB
 	 */
 	static readAllFromDB(dbElementName) {
-		return DBHelper.openDB('restaurant-review-DB').then(function(db) {
-			var tx = db.transaction(dbElementName);
-			var objStore = tx.objectStore(dbElementName);
-			return objStore.getAll();
+		return DBHelper.openDB('restaurant-review-DB').then(db => {
+			return db
+				.transaction(dbElementName)
+				.objectStore(dbElementName)
+				.getAll();
 		});
 	}
 
 	/**
 	 * Write/Save to IndexedDB
 	 */
-	static writeToDB(data, dbElementName, ReviewOnHold) {
-		return DBHelper.openDB('restaurant-review-DB').then(function(db) {
-			var tx = db.transaction(dbElementName, 'readwrite');
-			var objStore = tx.objectStore(dbElementName);
-			ReviewOnHold ? objStore.put(data) : Array.from(data).forEach(item => objStore.put(item));
+	static writeToDB(data, dbElementName, undivided) {
+		return DBHelper.openDB('restaurant-review-DB').then(db => {
+			const tx = db.transaction(dbElementName, 'readwrite');
+			const objStore = tx.objectStore(dbElementName);
+			undivided ? objStore.put(data) : Array.from(data).forEach(item => objStore.put(item));
 			return tx.complete;
 		});
 	}
@@ -75,10 +76,9 @@ class DBHelper {
 	 * Delete All From IDB
 	 */
 	static deleteAllFromDB(dbElementName) {
-		return DBHelper.openDB('restaurant-review-DB').then(function(db) {
-			var tx = db.transaction(dbElementName, 'readwrite');
-			var objStore = tx.objectStore(dbElementName);
-			objStore.clear();
+		return DBHelper.openDB('restaurant-review-DB').then(db => {
+			const tx = db.transaction(dbElementName, 'readwrite');
+			tx.objectStore(dbElementName).clear();
 			return tx.complete;
 		});
 	}
@@ -452,8 +452,6 @@ class DBHelper {
 			.then(reviews => {
 				callback(null, reviews);
 			});
-
-		/* Fetch the reviews added in offline mode in the 'on hold' IDB */
 		DBHelper.readAllFromDB('reviews-on-hold')
 			.then(data => {
 				return data;
@@ -461,5 +459,10 @@ class DBHelper {
 			.then(reviews => {
 				callback(null, reviews);
 			});
+		/**
+		 * NOTE: this last readAllFromDB() call will display all reviews added in offline mode,
+		 * independently of the self.restaurant in the actual page, so some reviews that don't belong to
+		 * that restaurant will appear, but in online mode they will be added in the right place.
+		 */
 	}
 }

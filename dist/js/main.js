@@ -98,8 +98,8 @@ window.initMap = () => {
  */
 openMainMap = () => {
 	const map = document.getElementById('map');
-	const mapButton = document.getElementById('map-button');
 	map.classList.add('open');
+	const mapButton = document.getElementById('map-button');
 	mapButton.remove();
 };
 
