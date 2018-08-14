@@ -3,12 +3,12 @@
 	"name": "Restuarants Reviews App",
 	"icons": [
 		{
-			"src": "dist/img/icons-192.png",
+			"src": "dist/img/icons-192.webp",
 			"type": "image/webp",
 			"sizes": "192x192"
 		},
 		{
-			"src": "dist/img/icons-512.png",
+			"src": "dist/img/icons-512.webp",
 			"type": "image/webp",
 			"sizes": "512x512"
 		}
