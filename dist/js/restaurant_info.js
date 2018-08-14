@@ -5,7 +5,7 @@ var map;
 /**
  * Fetch offline reviews as soon as the page is loaded in online mode.
  */
-document.addEventListener('DOMContentLoaded', event => {
+document.addEventListener('DOMContentLoaded', () => {
 	DBHelper.postStoredReviews();
 	DBHelper.putStoredFavorites();
 });
@@ -36,7 +36,7 @@ submitNewReview = () => {
 			comments.value = '';
 
 			appendReviewToList(newReview);
-			document.getElementById('review-end').innerHTML = 'Review Successfully submitted!';
+			document.getElementById('review-end').innerHTML = 'Review successfully submitted!';
 			if (navigator.connection.downlink == 0) {
 				alert(
 					'User in Offline Mode.\n' +
@@ -178,14 +178,8 @@ fillReviewsHTML = (reviews = self.reviews) => {
 	dateNewReview();
 
 	const container = document.getElementById('reviews-container');
-	const title = document.createElement('h2');
-	title.innerHTML = 'Reviews';
-	title.tabIndex = '0';
-	container.appendChild(title);
-
 	if (!reviews) {
 		const noReviews = document.createElement('p');
-		// noReviews.classList.add('no-reviews');
 		noReviews.innerHTML = 'No reviews yet!';
 		container.appendChild(noReviews);
 		return;

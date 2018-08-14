@@ -461,6 +461,5 @@ class DBHelper {
 			.then(reviews => {
 				callback(null, reviews);
 			});
-		// TODO: Remove Reviews Header extra
 	}
 }
