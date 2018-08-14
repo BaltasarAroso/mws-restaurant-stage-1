@@ -2,12 +2,12 @@ let restaurant;
 var map;
 
 //================================ Configure POST Reviews ================================//
-
 /**
  * Fetch offline reviews as soon as the page is loaded in online mode.
  */
 document.addEventListener('DOMContentLoaded', event => {
 	DBHelper.postStoredReviews();
+	DBHelper.putStoredFavorites();
 });
 
 /**
@@ -48,7 +48,6 @@ submitNewReview = () => {
 };
 
 submitNewReview();
-
 //========================================================================================//
 
 /**
@@ -333,6 +332,22 @@ fillBreadcrumb = (restaurant = self.restaurant) => {
 	const li = document.createElement('li');
 	li.innerHTML = restaurant.name;
 	breadcrumb.appendChild(li);
+
+	const starLi = document.createElement('li');
+	breadcrumb.appendChild(starLi);
+	const starButton = document.createElement('button');
+	if (self.restaurant.is_favorite == null || self.restaurant.is_favorite == undefined) {
+		self.restaurant.is_favorite = false;
+	}
+	if (self.restaurant.is_favorite == 'true') {
+		starButton.innerHTML = '<i class="fa fa-star"></i>';
+		starButton.id = 'star-favorite-true';
+	} else {
+		starButton.innerHTML = '<i class="fa fa-star"></i>';
+		starButton.id = 'star-favorite-false';
+	}
+	starButton.addEventListener('click', () => DBHelper.handleFavorite(self.restaurant));
+	starLi.appendChild(starButton);
 };
 
 /**
