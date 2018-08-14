@@ -5,7 +5,8 @@
 	"main": "gulpfile.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"precommit": "pretty-quick --staged"
+		"precommit": "pretty-quick --staged",
+		"start": "gulp"
 	},
 	"repository": {
 		"type": "git",
@@ -36,14 +37,14 @@
 		"gulp-sass": "^4.0.1",
 		"gulp-sourcemaps": "^2.6.4",
 		"gulp-uglify": "^3.0.1",
+		"imagemin": "6.0.0",
+		"imagemin-webp": "4.1.0",
 		"prettier": "^1.13.7",
 		"pretty-quick": "^1.6.0"
 	},
 	"dependencies": {
 		"ajv": "^6.5.2",
 		"del": "^3.0.0",
-		"idb": "^2.1.3",
-		"imagemin": "6.0.0",
-		"imagemin-webp": "4.1.0"
+		"idb": "^2.1.3"
 	}
 }

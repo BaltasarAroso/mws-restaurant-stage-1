@@ -15,13 +15,9 @@ var gulp = require('gulp'),
 	del = require('del'),
 	browserSync = require('browser-sync').create();
 
-var build = gulp.series(clean, styles, scripts, gulp.parallel(html, css, watch));
+var build = gulp.series(clean, scripts, gulp.parallel(html, imgs, css, watch));
 
 var paths = {
-	styles: {
-		src: 'sass/*.scss',
-		dest: 'sass_css'
-	},
 	html: {
 		src: '*.html',
 		dest: 'dist/'
@@ -35,14 +31,16 @@ var paths = {
 		dest: 'dist/js'
 	},
 	imgs: {
-		src: 'img/*',
+		src: 'img/**/*',
 		dest: 'dist/img'
 	}
 };
 
-imagemin([paths.imgs.src], paths.imgs.dest, {
-	use: [imageminWebp({ quality: 50 })]
-});
+function imgs() {
+	imagemin([paths.imgs.src], paths.imgs.dest, {
+		use: [imageminWebp({ quality: 50 })]
+	});
+}
 
 function html() {
 	return gulp.src(paths.html.src).pipe(gulp.dest(paths.html.dest));
@@ -79,31 +77,12 @@ function scripts() {
 	);
 }
 
-function compress() {
-	return gulp
-		.src('dist/js/all.js')
-		.pipe(gzip())
-		.pipe(gulp.dest(paths.scripts.dest));
-}
-
-function styles() {
-	return gulp
-		.src(paths.styles.src)
-		.pipe(sourcemaps.init())
-		.pipe(sass())
-		.on('error', sass.logError)
-		.pipe(
-			postcss([
-				autoprefixer({
-					browsers: ['last 2 versions']
-				}),
-				cssnano()
-			])
-		)
-		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest(paths.styles.dest))
-		.pipe(browserSync.stream());
-}
+// function compress() {
+// 	return gulp
+// 		.src('dist/js/all.js')
+// 		.pipe(gzip())
+// 		.pipe(gulp.dest(paths.scripts.dest));
+// }
 
 function watch() {
 	browserSync.init({
@@ -119,11 +98,9 @@ function reload() {
 }
 
 function clean() {
-	del(['sass_css']);
 	return del(['dist']);
 }
 
-exports.styles = styles;
 exports.watch = watch;
 exports.clean = clean;
 

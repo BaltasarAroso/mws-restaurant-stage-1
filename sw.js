@@ -14,6 +14,7 @@ self.addEventListener('install', function(event) {
 				'/index.html',
 				'/restaurant.html',
 				'/sw.js',
+				'/favicon.ico',
 				'/dist/js/idb.js',
 				'/dist/js/dbhelper.js',
 				'/dist/js/main.js',
@@ -31,7 +32,9 @@ self.addEventListener('install', function(event) {
 				'/dist/img/9.webp',
 				'/dist/img/10.webp',
 				'/dist/img/icons-192.webp',
-				'/dist/img/icons-512.webp'
+				'/dist/img/icons-512.webp',
+				'/dist/img/star_empty.svg',
+				'/dist/img/star_full.svg'
 			]);
 		})
 	);
@@ -83,25 +86,3 @@ self.addEventListener('activate', function(event) {
 		})
 	);
 });
-
-// /**
-//  * Sync the service worker
-//  */
-// self.addEventListener('sync', function(event) {
-// 	console.log('service worker sync...');
-// 	if (event.tag === 'sync-new-reviews') {
-// 		event.waitUntil(syncUnpostedReviews({ action: 'reviews-do-sync' }));
-// 	}
-// });
-
-// /**
-//  * Sync Function that match the unposted reviews
-//  */
-// function syncUnpostedReviews(message) {
-// 	console.log('syncUnpostedReviews');
-// 	return clients.matchAll().then(clients => {
-// 		clients.forEach(client => {
-// 			client.postMessage(message);
-// 		});
-// 	});
-// }
