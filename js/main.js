@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	fetchNeighborhoods();
 	fetchCuisines();
 	const mapButton = document.getElementById('map-button');
-	mapButton.addEventListener('click', initMap);
+	mapButton.addEventListener('click', handleMap);
 });
 
 /**
@@ -85,22 +85,21 @@ window.initMap = () => {
 		scrollwheel: false
 	});
 	updateRestaurants();
-
-	const mapButton = document.getElementById('map-button');
-	mapButton.innerHTML = 'Show Map';
-	mapButton.addEventListener('click', () => {
-		openMainMap();
-	});
 };
 
 /**
  * Open main map
  */
-openMainMap = () => {
+handleMap = () => {
 	const map = document.getElementById('map');
-	map.classList.add('open');
 	const mapButton = document.getElementById('map-button');
-	mapButton.remove();
+	if (map.classList.contains('open')) {
+		mapButton.innerHTML = 'Show Map';
+		map.classList.remove('open');
+	} else {
+		mapButton.innerHTML = 'Close Map';
+		map.classList.add('open');
+	}
 };
 
 /**
