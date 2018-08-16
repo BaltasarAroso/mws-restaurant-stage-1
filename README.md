@@ -4,33 +4,26 @@
 
 ### Usage
 
-1. Run the API server locally
+1. Run the API server locally.
 ```
 $ git clone https://github.com/BaltasarAroso/mws-restaurant-stage-3.git
 $ cd mws-restaurant-stage-3
 $ node server
 ```
 
-2. Clone the repository and get into the project folder
+2. Clone the repository and get into the project folder.
 ```
 $ git clone https://github.com/BaltasarAroso/mws-restaurant-stage-1.git
 $ cd mws-restaurant-stage-1
 ```
 
-3. In the same directory, check the version of Python you have: `python -V`.
+3. In the same directory, check the version of Python you have: `python -V`. Add **Python 3.x** if you don't have it.
 
-	If you have **Python 2.x**, spin up the server with `python -m SimpleHTTPServer 8000` (or some other port, if port 8000 is already in use).
+4. Run `npm start`.
 
-	For **Python 3.x**, you can use `python3 -m http.server 8000`.
+	This will run **gulp** automatically and join optimized files in `dist` folder, then will spin up the **http server** at port 8000 using python3.
 
-
-4. Finally, explore the site in `http://localhost:8000`
-
-**Note:** `npm start` runs` gulp` automatically and join optimized files in `dist` folder, but that folder is already in repository so there's no need to run` npm start` again.
+5. Finally, explore the site in `http://localhost:8000`.
 
 ### Final LightHouse Evaluation of Stage 3
 ![alt text](https://github.com/BaltasarAroso/mws-restaurant-stage-1/blob/master/Lighthouse-Evaluation-stage3-v2.png)
-
-
-
-
