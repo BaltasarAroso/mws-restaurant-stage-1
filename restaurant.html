@@ -53,23 +53,23 @@
         <h2>Add a review</h2>
         <form id="review-form" method="POST" aria-label="Review POST Form">
           <section id="review-form-header">
-            <input id="review-form-header-name" type="text" name="name" placeholder="Wright your name here"
-              aria-label="Wright your name here" required>
+            <input id="review-form-header-name" type="text" name="name" placeholder="Name" aria-label="Wright your name here"
+              required>
             <p id="review-form-header-date">
             </p>
           </section>
           <section id="review-form-rating-title">
             <p>Rating: </p>
             <select id="review-form-rating" name="rating" required>
-              <option id="review-form-rating-option" value="1">1</option>
-              <option id="review-form-rating-option" value="2">2</option>
-              <option id="review-form-rating-option" value="3">3</option>
-              <option id="review-form-rating-option" value="4">4</option>
-              <option id="review-form-rating-option" value="5">5</option>
+              <option id="review-form-rating-option" value="1">1 (very bad)</option>
+              <option id="review-form-rating-option" value="2">2 (bad)</option>
+              <option id="review-form-rating-option" value="3" selected>3 (normal)</option>
+              <option id="review-form-rating-option" value="4">4 (good)</option>
+              <option id="review-form-rating-option" value="5">5 (very good)</option>
             </select>
           </section>
-          <textarea id="review-form-comments" name="comments" placeholder="Wright your comment here"
-            alt="Wright your comment here" rows="4" required></textarea>
+          <textarea id="review-form-comments" name="comments" placeholder="Comment" alt="Wright your comment here"
+            rows="4" required></textarea>
           <button id="review-form-submit-button" type="submit">Add Review</button>
         </form>
         <p id="review-end"></p>
