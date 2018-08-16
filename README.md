@@ -28,6 +28,8 @@ $ cd mws-restaurant-stage-1
 
 **Note:** `npm start` runs` gulp` automatically and join optimized files in `dist` folder, but that folder is already in repository so there's no need to run` npm start` again.
 
+### Final LightHouse Evaluation of Stage 3
+![alt text](https://github.com/BaltasarAroso/mws-restaurant-stage-1/blob/master/Lighthouse-Evaluation-stage3-v2.png)
 
 
 
