@@ -14,7 +14,6 @@ self.addEventListener('install', function(event) {
 				'/index.html',
 				'/restaurant.html',
 				'/sw.js',
-				'/favicon.ico',
 				'/dist/js/idb.js',
 				'/dist/js/dbhelper.js',
 				'/dist/js/main.js',
@@ -34,7 +33,8 @@ self.addEventListener('install', function(event) {
 				'/dist/img/icons-192.webp',
 				'/dist/img/icons-512.webp',
 				'/dist/img/star_empty.svg',
-				'/dist/img/star_full.svg'
+				'/dist/img/star_full.svg',
+				'/dist/img/favicon.webp'
 			]);
 		})
 	);

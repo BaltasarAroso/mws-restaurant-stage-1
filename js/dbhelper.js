@@ -78,6 +78,17 @@ class DBHelper {
 	}
 
 	/**
+	 * Delete Key From IDB
+	 */
+	static deleteKeyFromDB(dbElementName, key) {
+		return DBHelper.openDB('restaurant-review-DB').then(db => {
+			const tx = db.transaction(dbElementName, 'readwrite');
+			tx.objectStore(dbElementName).delete(key);
+			return tx.complete;
+		});
+	}
+
+	/**
 	 * Delete All From IDB
 	 */
 	static deleteAllFromDB(dbElementName) {
@@ -113,7 +124,7 @@ class DBHelper {
 		}
 	}
 
-	//================================ Configure POST Reviews ================================//
+	//================================ Configure Reviews ================================//
 	/**
 	 * POST New Review to API and respective DB
 	 */
@@ -150,6 +161,29 @@ class DBHelper {
 				DBHelper.deleteAllFromDB('reviews-on-hold');
 			});
 		}
+	}
+
+	/**
+	 * Delete Review
+	 */
+	static deleteReview(review) {
+		if (!review) {
+			return;
+		}
+		if (navigator.connection.downlink) {
+			DBHelper.deleteKeyFromDB(`reviews-${review.restaurant_id}`, review.id);
+			DBHelper.deleteKeyFromDB('reviews-on-hold', review.id);
+		} else {
+			alert('User in offline mode. Unable to delete the review until you return to online mode.');
+			return;
+		}
+		return fetch(`${DBHelper.DATABASE_URL}/reviews/${review.id}`, {
+			method: 'DELETE'
+		})
+			.then(response => response.json())
+			.then(function() {
+				alert('Review Deleted!');
+			});
 	}
 
 	//============================ Configure Favorite Restaurants ============================//

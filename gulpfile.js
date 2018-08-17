@@ -56,7 +56,7 @@ function css() {
 }
 
 function imgs() {
-	return imagemin([paths.imgs.src], paths.imgs.dest, {
+	return imagemin([paths.imgs.src, 'favicon.ico'], paths.imgs.dest, {
 		use: [imageminWebp({ quality: 50 })]
 	});
 }

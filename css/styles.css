@@ -59,8 +59,21 @@ nav,
 section {
 	display: grid;
 }
+#logo {
+	display: flex;
+	flex-direction: row;
+}
+#favicon {
+	margin: auto;
+	height: 2em;
+	width: 2em;
+}
 #homepage_title {
 	padding: 15px;
+	color: #fff;
+}
+#homepage_title:hover {
+	color: #f0a448;
 }
 #maincontent {
 	background-color: #f3f3f3;
@@ -389,6 +402,16 @@ nav h1 a {
 	overflow: hidden;
 	position: relative;
 	width: auto;
+}
+#reviews-list-cross {
+	background-color: #1a1919;
+	border: 1px #1a1919;
+	color: #b7b8b9;
+	transform: scale(1.4);
+}
+#reviews-list-cross:hover {
+	transform: scale(1.7);
+	color: #cc7000;
 }
 #review-form-header,
 #reviews-list section {

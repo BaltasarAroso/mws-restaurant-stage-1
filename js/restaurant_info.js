@@ -27,7 +27,7 @@ putStoredFavorites = () => {
 		});
 };
 
-//================================ Configure POST Reviews ================================//
+//================================ Configure Reviews ================================//
 /**
  * POST Stored Reviews in offline mode to API and IDB
  */
@@ -85,6 +85,22 @@ submitNewReview = () => {
 };
 
 submitNewReview();
+
+/**
+ * Confirm Delete Review
+ */
+confirmReviewDeletion = () => {
+	var password = prompt('Please enter the admin password:', 'password');
+	if (password == null || password == '') {
+		return false;
+	} else if (password == 'root') {
+		return true;
+	} else {
+		alert('Password wrong. Please verify your permission to delete this review.');
+		return false;
+	}
+};
+
 //========================================================================================//
 
 /**
@@ -328,6 +344,17 @@ createReviewHTML = review => {
 	date.id = 'reviews-list-date';
 	section.appendChild(date);
 	date.tabIndex = '0';
+
+	const cross = document.createElement('button');
+	cross.innerHTML = '✖';
+	cross.id = 'reviews-list-cross';
+	cross.addEventListener('click', () => {
+		if (confirmReviewDeletion()) {
+			DBHelper.deleteReview(review).then(() => window.location.reload());
+		}
+	});
+	section.appendChild(cross);
+	cross.tabIndex = '0';
 
 	const rating = document.createElement('h3');
 	rating.innerHTML = `Rating: ${review.rating}`;
