@@ -159,6 +159,7 @@ nav h1 a {
 }
 #favorite {
 	display: inline;
+	margin: 0 0.75rem 0.75rem;
 }
 #favorite-checkbox {
 	font-size: 14px;
@@ -169,6 +170,7 @@ nav h1 a {
 	font-size: 10pt;
 	display: inline;
 	color: #fff;
+	white-space: nowrap;
 }
 #favorite label:hover {
 	cursor: pointer;
@@ -232,10 +234,12 @@ nav h1 a {
 #restaurants-list button .star {
 	width: 15px;
 }
-#restaurants-list .star-favorite-true,
-#restaurants-list .star-favorite-false {
+#restaurants-list .star-favorite {
 	margin: 27px 0 0 0;
 	height: 3em;
+}
+#restaurants-list .star-favorite.false:hover {
+	background-color: #f5df14;
 }
 #restaurants-list .restaurant-img {
 	background-color: #ccc;
@@ -289,7 +293,7 @@ nav h1 a {
 #breadcrumb button .star {
 	width: 15px;
 }
-#breadcrumb .star-favorite-false:hover {
+#breadcrumb .star-favorite.false:hover {
 	background-color: #f5df14;
 }
 

@@ -1,14 +1,51 @@
 let restaurant;
 var map;
 
-//================================ Configure POST Reviews ================================//
 /**
  * Fetch offline reviews as soon as the page is loaded in online mode.
  */
 document.addEventListener('DOMContentLoaded', () => {
-	DBHelper.postStoredReviews();
-	DBHelper.putStoredFavorites();
+	postStoredReviews();
+	putStoredFavorites();
 });
+
+//============================ Configure Favorite Restaurants ============================//
+/**
+ * POST Stored Reviews in offline mode to API and IDB
+ */
+putStoredFavorites = () => {
+	DBHelper.readAllFromDB('favorite-on-hold')
+		.then(data => {
+			if (data.length == 0) {
+				return;
+			}
+			DBHelper.checkConnectionPUT(data[0], false);
+			return data;
+		})
+		.catch(error => {
+			console.log(`ERROR: Load from Favorites on hold DB failed due to ${error}`);
+		});
+};
+
+//================================ Configure POST Reviews ================================//
+/**
+ * POST Stored Reviews in offline mode to API and IDB
+ */
+postStoredReviews = () => {
+	DBHelper.readAllFromDB('reviews-on-hold')
+		.then(data => {
+			if (data.length == 0) {
+				return;
+			}
+			data.forEach(review => {
+				DBHelper.checkConnectionPOST(review);
+			});
+			return data;
+		})
+		.catch(error => {
+			console.log(`ERROR: Load from reviews on hold DB failed due to ${error}`);
+		});
+};
 
 /**
  * Submit the new review
@@ -331,17 +368,29 @@ fillBreadcrumb = (restaurant = self.restaurant) => {
 	breadcrumb.appendChild(starLi);
 	const starButton = document.createElement('button');
 	starButton.setAttribute('aria-label', `Button to add/remove ${restaurant.name} from favorites`);
-	if (self.restaurant.is_favorite == null || self.restaurant.is_favorite == undefined) {
-		self.restaurant.is_favorite = false;
+	starButton.className = 'star-favorite';
+	if (restaurant.is_favorite == null || restaurant.is_favorite == undefined) {
+		restaurant.is_favorite = false;
 	}
-	if (self.restaurant.is_favorite == 'true') {
+	if (restaurant.is_favorite == 'true') {
 		starButton.innerHTML = '<img class="star" src="dist/img/star_full.svg" alt="star full">';
-		starButton.className = 'star-favorite-true';
+		starButton.classList.remove('false');
 	} else {
 		starButton.innerHTML = '<img class="star" src="dist/img/star_empty.svg" alt="star empty">';
-		starButton.className = 'star-favorite-false';
+		starButton.classList.add('false');
 	}
-	starButton.addEventListener('click', () => DBHelper.handleFavorite(self.restaurant));
+	starButton.addEventListener('click', event => {
+		if (!starButton.classList.contains('false')) {
+			starButton.innerHTML = '<img class="star" src="dist/img/star_empty.svg" alt="star empty">';
+			starButton.classList.add('false');
+			restaurant.is_favorite = 'false';
+		} else {
+			starButton.innerHTML = '<img class="star" src="dist/img/star_full.svg" alt="star full">';
+			starButton.classList.remove('false');
+			restaurant.is_favorite = 'true';
+		}
+		DBHelper.handleFavorite(restaurant, false);
+	});
 	starLi.appendChild(starButton);
 };
 

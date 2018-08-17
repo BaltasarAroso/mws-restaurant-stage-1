@@ -40,8 +40,13 @@ class DBHelper {
 					keyPath: 'updatedAt'
 				});
 			}
-			if (!upgradeDB.objectStoreNames.contains('favorites-on-hold')) {
-				upgradeDB.createObjectStore('favorites-on-hold', {
+			if (!upgradeDB.objectStoreNames.contains('favorite-on-hold')) {
+				upgradeDB.createObjectStore('favorite-on-hold', {
+					keyPath: 'id'
+				});
+			}
+			if (!upgradeDB.objectStoreNames.contains('all-favorites-on-hold')) {
+				upgradeDB.createObjectStore('all-favorites-on-hold', {
 					keyPath: 'id'
 				});
 			}
@@ -107,10 +112,8 @@ class DBHelper {
 				});
 		}
 	}
-	//========================================================================================//
 
 	//================================ Configure POST Reviews ================================//
-
 	/**
 	 * POST New Review to API and respective DB
 	 */
@@ -149,128 +152,64 @@ class DBHelper {
 		}
 	}
 
-	/**
-	 * POST Stored Reviews in offline mode to API and IDB
-	 */
-	static postStoredReviews() {
-		DBHelper.readAllFromDB('reviews-on-hold')
-			.then(data => {
-				if (data.length == 0) {
-					return;
-				}
-				data.forEach(review => {
-					DBHelper.checkConnectionPOST(review);
-				});
-				return data;
-			})
-			.catch(error => {
-				console.log(`ERROR: Load from reviews on hold DB failed due to ${error}`);
-			});
-	}
-
-	//========================================================================================//
-
 	//============================ Configure Favorite Restaurants ============================//
-
-	/**
-	 * Favorite a restaurant
-	 */
-	static favorite(restaurant_id) {
-		return fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=true`, {
-			method: 'PUT'
-		})
-			.then(response => response.json())
-			.then(data => {
-				DBHelper.writeToDB(data, 'restaurants', true);
-				return data;
-			})
-			.catch(error => {
-				console.log(`ERROR: Unable to favorite restaurant due to ${error}`);
-			});
-	}
-
-	/**
-	 * Unfavorite a restaurant
-	 */
-	static unfavorite(restaurant_id) {
-		return fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant_id}/?is_favorite=false`, {
-			method: 'PUT'
-		})
-			.then(response => response.json())
-			.then(data => {
-				DBHelper.writeToDB(data, 'restaurants', true);
-				return data;
-			})
-			.catch(error => {
-				console.log(`ERROR: Unable to unfavorite restaurant due to ${error}`);
-			});
-	}
-
 	/**
 	 * Handle Favorite
 	 */
-	static handleFavorite(restaurant) {
+	static handleFavorite(restaurant, allFavorites) {
 		if (navigator.connection.downlink) {
-			if (restaurant.is_favorite == 'true') {
-				DBHelper.unfavorite(restaurant.id).then(function() {
-					window.location.reload();
+			return fetch(
+				`${DBHelper.DATABASE_URL}/restaurants/${restaurant.id}/?is_favorite=${
+					restaurant.is_favorite
+				}`,
+				{
+					method: 'PUT'
+				}
+			)
+				.then(response => response.json())
+				.then(data => {
+					DBHelper.writeToDB(data, 'restaurants', true);
+					return data;
+				})
+				.catch(error => {
+					console.log(`ERROR: Unable to favorite restaurant due to ${error}`);
 				});
-			} else {
-				DBHelper.favorite(restaurant.id).then(function() {
-					window.location.reload();
-				});
-			}
 		} else {
-			// Only allow one entry in favorite-on-hold database, because in offline mode only can navigate between the pages in cache
-			// and let's assume that only changes one restaurant preference in offline mode, so first delete all them add new.
-			DBHelper.deleteAllFromDB('favorites-on-hold');
-			DBHelper.writeToDB(restaurant, 'favorites-on-hold', true);
-			alert(
-				'User in Offline Mode.\n' +
-					'Submitted favorite restaurant will be added to API when online, now it is only added to a temporary IDB.'
-			);
+			if (allFavorites) {
+				DBHelper.writeToDB(restaurant, 'all-favorites-on-hold', true);
+				alert(
+					'User in Offline Mode.\n' +
+						'Submitted favorite restaurant will be added to API when online, now it is only added to a temporary IDB.'
+				);
+			} else {
+				DBHelper.deleteAllFromDB('favorite-on-hold');
+				DBHelper.writeToDB(restaurant, 'favorite-on-hold', true);
+				alert(
+					'User in Offline Mode.\n' +
+						'Only the last submitted favorite restaurant will be added to API when online, now it is only added to a temporary IDB.\n' +
+						'So if you change to another restaurant page and change his favorite configuration only that one will be updated.'
+				);
+			}
 		}
 	}
 
 	/**
 	 * Check Connection, POST offline data to API and Delete it from the 'on hold' IDB
 	 */
-	static checkConnectionPUT(restaurant) {
+	static checkConnectionPUT(restaurant, allFavorites) {
 		if (navigator.connection.downlink) {
-			DBHelper.putFavorite(restaurant).then(function() {
-				DBHelper.deleteAllFromDB('favorites-on-hold').then(function() {
-					window.location.reload();
-				});
-			});
-		}
-	}
-
-	/**
-	 * Put Favorite added in offline mode
-	 */
-	static putFavorite(restaurant) {
-		if (restaurant.is_favorite == 'true') {
-			return DBHelper.unfavorite(restaurant.id);
-		} else {
-			return DBHelper.favorite(restaurant.id);
-		}
-	}
-
-	/**
-	 * POST Stored Reviews in offline mode to API and IDB
-	 */
-	static putStoredFavorites() {
-		DBHelper.readAllFromDB('favorites-on-hold')
-			.then(data => {
-				if (data.length == 0) {
-					return;
+			DBHelper.handleFavorite(restaurant, allFavorites).then(function() {
+				if (allFavorites) {
+					DBHelper.deleteAllFromDB('all-favorites-on-hold').then(function() {
+						window.location.reload();
+					});
+				} else {
+					DBHelper.deleteAllFromDB('favorite-on-hold').then(function() {
+						window.location.reload();
+					});
 				}
-				DBHelper.checkConnectionPUT(data[0]);
-				return data;
-			})
-			.catch(error => {
-				console.log(`ERROR: Load from Favorites on hold DB failed due to ${error}`);
 			});
+		}
 	}
 
 	//========================================================================================//

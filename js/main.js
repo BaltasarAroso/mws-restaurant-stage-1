@@ -10,9 +10,32 @@ var markers = [];
 document.addEventListener('DOMContentLoaded', () => {
 	fetchNeighborhoods();
 	fetchCuisines();
+	putAllStoredFavorites();
 	const mapButton = document.getElementById('map-button');
 	mapButton.addEventListener('click', handleMap);
 });
+
+//============================ Configure Favorite Restaurants ============================//
+/**
+ * POST All Stored Reviews in offline mode to API and IDB
+ */
+putAllStoredFavorites = () => {
+	DBHelper.readAllFromDB('all-favorites-on-hold')
+		.then(data => {
+			if (data.length == 0) {
+				return;
+			}
+			data.forEach(restaurant => {
+				DBHelper.checkConnectionPUT(restaurant, true);
+			});
+			return data;
+		})
+		.catch(error => {
+			console.log(`ERROR: Load from Favorites on hold DB failed due to ${error}`);
+		});
+};
+
+//========================================================================================//
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -191,19 +214,31 @@ createRestaurantHTML = restaurant => {
 
 	const starButton = document.createElement('button');
 	starButton.setAttribute('aria-label', `Button to add/remove ${restaurant.name} from favorites`);
+	starButton.className = 'star-favorite';
 	if (restaurant.is_favorite == null || restaurant.is_favorite == undefined) {
 		restaurant.is_favorite = false;
 	}
 	if (restaurant.is_favorite == 'true') {
 		starButton.innerHTML = '<img class="star" src="dist/img/star_full.svg" alt="star full">';
-		starButton.className = 'star-favorite-true';
+		starButton.classList.remove('false');
 	} else {
 		starButton.innerHTML = '<img class="star" src="dist/img/star_empty.svg" alt="star empty">';
-		starButton.className = 'star-favorite-false';
+		starButton.classList.add('false');
 	}
-	starButton.addEventListener('click', () => DBHelper.handleFavorite(restaurant));
-	buttons.append(starButton);
+	starButton.addEventListener('click', event => {
+		if (!starButton.classList.contains('false')) {
+			starButton.innerHTML = '<img class="star" src="dist/img/star_empty.svg" alt="star empty">';
+			starButton.classList.add('false');
+			restaurant.is_favorite = 'false';
+		} else {
+			starButton.innerHTML = '<img class="star" src="dist/img/star_full.svg" alt="star full">';
+			starButton.classList.remove('false');
+			restaurant.is_favorite = 'true';
+		}
+		DBHelper.handleFavorite(restaurant, true);
+	});
 
+	buttons.append(starButton);
 	li.append(buttons);
 
 	return li;
