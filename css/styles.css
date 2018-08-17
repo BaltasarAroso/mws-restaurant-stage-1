@@ -157,6 +157,23 @@ nav h1 a {
 	margin: 0 0.75rem 0.75rem;
 	width: 200px;
 }
+#favorite {
+	display: inline;
+}
+#favorite-checkbox {
+	font-size: 14px;
+	margin: 0;
+	padding: 2px;
+}
+#favorite label {
+	font-size: 10pt;
+	display: inline;
+	color: #fff;
+}
+#favorite label:hover {
+	cursor: pointer;
+	color: #f0a448;
+}
 
 /* Restaurant List */
 #restaurants-list {
@@ -195,7 +212,12 @@ nav h1 a {
 	text-transform: uppercase;
 	word-wrap: break-word;
 }
-#restaurants-list li button {
+#restaurants-list .footer-buttons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+#restaurants-list .view-details {
 	background-color: #8b5517;
 	border-bottom: 3px solid #eee;
 	color: #fff;
@@ -206,6 +228,14 @@ nav h1 a {
 	text-align: center;
 	text-decoration: none;
 	text-transform: uppercase;
+}
+#restaurants-list button .star {
+	width: 15px;
+}
+#restaurants-list .star-favorite-true,
+#restaurants-list .star-favorite-false {
+	margin: 27px 0 0 0;
+	height: 3em;
 }
 #restaurants-list .restaurant-img {
 	background-color: #ccc;
@@ -256,10 +286,10 @@ nav h1 a {
 	content: "/\00a0";
 	padding: 8px;
 }
-.star {
+#breadcrumb button .star {
 	width: 15px;
 }
-#star-favorite-false:hover {
+#breadcrumb .star-favorite-false:hover {
 	background-color: #f5df14;
 }
 

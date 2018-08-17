@@ -330,15 +330,16 @@ fillBreadcrumb = (restaurant = self.restaurant) => {
 	const starLi = document.createElement('li');
 	breadcrumb.appendChild(starLi);
 	const starButton = document.createElement('button');
+	starButton.setAttribute('aria-label', `Button to add/remove ${restaurant.name} from favorites`);
 	if (self.restaurant.is_favorite == null || self.restaurant.is_favorite == undefined) {
 		self.restaurant.is_favorite = false;
 	}
 	if (self.restaurant.is_favorite == 'true') {
-		starButton.innerHTML = '<img class="star" src="dist/img/star_full.svg">';
-		starButton.id = 'star-favorite-true';
+		starButton.innerHTML = '<img class="star" src="dist/img/star_full.svg" alt="star full">';
+		starButton.className = 'star-favorite-true';
 	} else {
-		starButton.innerHTML = '<img class="star" src="dist/img/star_empty.svg">';
-		starButton.id = 'star-favorite-false';
+		starButton.innerHTML = '<img class="star" src="dist/img/star_empty.svg" alt="star empty">';
+		starButton.className = 'star-favorite-false';
 	}
 	starButton.addEventListener('click', () => DBHelper.handleFavorite(self.restaurant));
 	starLi.appendChild(starButton);

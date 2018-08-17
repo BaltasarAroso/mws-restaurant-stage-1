@@ -44,6 +44,11 @@
                               <option role="option" value="all">All Cuisines</option>
                         </select>
                         <button id="map-button">Show Map</button>
+                        <div id="favorite">
+                              <input id="favorite-checkbox" type="checkbox" name="favorite" value="star" aria-label="Favorite Option"
+                                    onclick="updateRestaurants()">
+                              <label for="favorite-checkbox">Favorite Restaurants</label>
+                        </div>
                   </div>
                   <ul id="restaurants-list"></ul>
             </section>

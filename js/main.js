@@ -179,11 +179,32 @@ createRestaurantHTML = restaurant => {
 	address.innerHTML = restaurant.address;
 	li.append(address);
 
+	const buttons = document.createElement('div');
+	buttons.className = 'footer-buttons';
+
 	const more = document.createElement('button');
+	more.className = 'view-details';
 	more.innerHTML = 'View Details';
 	more.setAttribute('aria-label', `View Details of ${restaurant.name}`);
 	more.setAttribute('onclick', `location.href='${DBHelper.urlForRestaurant(restaurant)}'`);
-	li.append(more);
+	buttons.append(more);
+
+	const starButton = document.createElement('button');
+	starButton.setAttribute('aria-label', `Button to add/remove ${restaurant.name} from favorites`);
+	if (restaurant.is_favorite == null || restaurant.is_favorite == undefined) {
+		restaurant.is_favorite = false;
+	}
+	if (restaurant.is_favorite == 'true') {
+		starButton.innerHTML = '<img class="star" src="dist/img/star_full.svg" alt="star full">';
+		starButton.className = 'star-favorite-true';
+	} else {
+		starButton.innerHTML = '<img class="star" src="dist/img/star_empty.svg" alt="star empty">';
+		starButton.className = 'star-favorite-false';
+	}
+	starButton.addEventListener('click', () => DBHelper.handleFavorite(restaurant));
+	buttons.append(starButton);
+
+	li.append(buttons);
 
 	return li;
 };

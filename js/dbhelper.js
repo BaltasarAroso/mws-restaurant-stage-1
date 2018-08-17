@@ -362,6 +362,10 @@ class DBHelper {
 					// filter by neighborhood
 					results = results.filter(r => r.neighborhood == neighborhood);
 				}
+				if (document.getElementById('favorite-checkbox').checked) {
+					// filter by favorite
+					results = results.filter(r => r.is_favorite == 'true');
+				}
 				callback(null, results);
 			}
 		});
